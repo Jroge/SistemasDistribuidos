@@ -1,15 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Clases;
 
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
-
 /**
  *
  * @Jroge
@@ -40,10 +31,17 @@ public class Cubilete {
     public boolean estaVacio(){
         return dados.isEmpty();
     }
-    public void todosSeleccionados(){
+    public void elegirTodos(){
         for(int i=1;i<=cantidadDeDados;i++){
             dados.get(i-1).setFueElegido(true);
         }
+    }
+    public boolean estanTodosElegidos(){
+        for(int i=1;i<=cantidadDeDados;i++){
+            if(!dados.get(i-1).fueElegido()){
+                return false;
+            }
+        }return true;
     }
     
     @Override

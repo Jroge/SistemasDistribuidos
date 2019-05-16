@@ -2,7 +2,6 @@ package Forms;
 
 import Clases.Constantes;
 import Clases.Cubilete;
-import Clases.constNames;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import TSocket.TClient.Cliente.TSClientClienteSocket;
@@ -15,28 +14,24 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     
     TSClientClienteSocket cliente;
     Cubilete cubilete;
-    int canTirosRealizados,tamGrande,tamPeque;
-    boolean enTurno;
+    int canTirosRealizados,tamGrande,tamPeque,aux;
+    boolean enTurno,puedeElegirJugada;
     boolean[] modificable;
     
     public FormClienteJuego() {
-        enTurno = true;
-        canTirosRealizados = 0;
         initComponents();
-        botonLanzar.setEnabled(false);
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
-        enTurno=false;
         mostrarDadosIniciales();        
         //cliente = new TSClientClienteSocket("192.168.43.121",9090){//ELITO
         //cliente = new TSClientClienteSocket("192.168.1.104",9090){//JROGE
-        cliente = new TSClientClienteSocket("127.0.0.1",9090){//JROGE
+        cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
             public void onRead(String mensaje){
                 System.out.println(mensaje);
                 String[] msj=mensaje.split("_");
                 switch(msj[2]){
-                    case constNames.MOSTRAR_DADOS:
+                    case Constantes.MOSTRAR_DADOS:
                         setCubilete(msj[3]);
                         //AÑADIR CAMBIO DE TAMAÑO POR DADOactualizarDados();
                         mostrarGif();
@@ -48,20 +43,29 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                                 canTirosRealizados++;
                                 if (canTirosRealizados == 3) {
                                     todosSeleccionados();
-                                    if (enTurno) {
-                                        botonLanzar.setText("FINALIZAR TURNO");
+                                    if(enTurno){
+                                        botonLanzar.setText("VER JUGADAS");
                                     }
                                 }
-                                if(enTurno){botonLanzar.setEnabled(true);}
                                 actualizarDados();
+                                if(enTurno){
+                                    botonLanzar.setEnabled(true);
+                                }
                             }
                         };
                         timer.schedule(tarea, 1000, 1000);
                         break;
-                    case constNames.ES_TU_TURNO:
+                    case Constantes.ES_TU_TURNO:
                         enTurno=true;
                         botonLanzar.setEnabled(true);
                         canTirosRealizados=0;
+                        puedeElegirJugada=false;
+                        botonLanzar.setText("LANZAR DADOS");
+                        break;
+                    case Constantes.LISTA_DE_JUGADAS:
+                        puedeElegirJugada=true;
+                        botonLanzar.setEnabled(true);
+                        botonLanzar.setText("SELECCIONAR JUGADA");
                         break;
                 }
             }
@@ -553,18 +557,18 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         if (canTirosRealizados == 0) {
             cubilete=new Cubilete();
         }
-        if (canTirosRealizados <= 2) {
-            botonLanzar.setEnabled(false);
+        if(puedeElegirJugada){
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS);
+        }else if (canTirosRealizados <= 2) {
             Gson json=new Gson();
             String cad=json.toJson(cubilete);
-            cliente.sendMensaje(constNames.JUEGO+constNames.GENERAR_DADOS
-                    + "_" + cad);
-        } else if (canTirosRealizados == 3) {
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.TERMINE);
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+"_"+cad);
+        }else{
+            String jugada="j";
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada);
             enTurno=false;
-            botonLanzar.setEnabled(false);
-            botonLanzar.setText("LANZAR DADOS");
         }
+        botonLanzar.setEnabled(false);
     }//GEN-LAST:event_botonLanzarActionPerformed
  
     private void imagenDado1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenDado1MouseClicked
@@ -650,7 +654,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     
     //No altera valores-Si altera tamaños
     public void todosSeleccionados(){
-        cubilete.todosSeleccionados();
+        cubilete.elegirTodos();
         todasImagenesPeque();
     } 
     
@@ -750,6 +754,16 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             icon = new ImageIcon(image.getImage().getScaledInstance(
                     tamPeque,tamPeque,Image.SCALE_DEFAULT));    
         }imagenDado5.setIcon(icon);
+        if(cubilete.estanTodosElegidos()){
+            botonLanzar.setText("VER JUGADAS");
+            puedeElegirJugada=true;
+            aux=canTirosRealizados;
+            canTirosRealizados=3;
+        }else{
+            botonLanzar.setText("LANZAR DADOS");
+            puedeElegirJugada=false;
+            canTirosRealizados=aux;
+        }
     }
     
     public static void main(String args[]) {
@@ -776,6 +790,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             }
         });
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonLanzar;
     private javax.swing.JLabel imagenDado1;

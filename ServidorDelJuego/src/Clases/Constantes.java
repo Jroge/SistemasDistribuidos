@@ -14,13 +14,9 @@ package Clases;
 public class Constantes {
     public static final String GENERAR_DADOS = "GENERARDADOS";
     public static final String MOSTRAR_DADOS = "MOSTRARDADOS";
-    public static final String DADOS_ESCOGIDOS = "DADOSESCOGIDOS";
-    public static final String SIGUIENTE_TIRO = "SIGUIENTETIRO";
     public static final String LISTA_DE_JUGADAS = "LISTADEJUGADAS";
     public static final String JUGADA_ESCOGIDA = "JUGADAESCOGIDA";
     public static final String ES_TU_TURNO     =  "ESTUTURNO";
-    public static final String NO_ES_TU_TURNO =  "NOESTUTURNO";
-    public static final String TERMINE =  "TERMINE";
     
     public static final String JUEGO = "S_JUEGO_";
 }

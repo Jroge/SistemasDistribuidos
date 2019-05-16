@@ -31,9 +31,8 @@ public class Partida {
     public void administrarJuego(TSocketInfo socketInfo, String mensaje){
         String[] accion = mensaje.split("_");
         switch (accion[2]){
-            case constNames.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
-            case constNames.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3]); break;
-            case constNames.TERMINE: siguienteTiro(socketInfo); break;
+            case Constantes.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
+            case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3]); break;
         }
     }
     private void juegoGenerarDados(String cubile){
@@ -45,12 +44,8 @@ public class Partida {
     }
     
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada){
+        server.sendMensaje(siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
         actualizarTablero(jugada);
-    }
-    private void siguienteTiro(TSocketInfo socketInfo){
-        //server.sendMensaje(socketInfo,Constantes.JUEGO+constNames.NO_ES_TU_TURNO);
-        TSocketInfo siguiente=siguiente(socketInfo);
-        server.sendMensaje(siguiente,Constantes.JUEGO+constNames.ES_TU_TURNO);
     }
     
     //UTILS

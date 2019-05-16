@@ -152,17 +152,17 @@ public class FormServidorJuego extends javax.swing.JFrame {
     }//GEN-LAST:event_IniciarBtnActionPerformed
 
     private void DetenerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DetenerBtnActionPerformed
-        servidor.stopServer();;
+        servidor.stopServer();
         modificarEstadosBotones();
     }//GEN-LAST:event_DetenerBtnActionPerformed
 
     private void empezarNuevaPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empezarNuevaPartidaActionPerformed
         partida = new Partida(this.servidor);
-        if(!listaMisConectados.isEmpty()) {
-            listaMisConectados.forEach((socket) -> {
+        if(!listaMisConectados.isEmpty()){
+            listaMisConectados.forEach((socket)->{
                 partida.addNuevoJugador(socket);});
             partida.administrarJuego(partida.listaJugadores.getLast().socketJugador,
-                    Constantes.JUEGO+Constantes.TERMINE);
+                    Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"j");
         }else{
             System.out.println("NO HAY JUGADORES");
         }
