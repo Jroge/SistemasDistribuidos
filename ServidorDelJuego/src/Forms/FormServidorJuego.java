@@ -1,4 +1,4 @@
-package FormServidorDelJuego;
+package Forms;
 
 import Clases.Constantes;
 import Clases.Partida;
