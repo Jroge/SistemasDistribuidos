@@ -41,6 +41,25 @@ public class Cubilete {
             dados.get(i-1).setFueElegido(true);
         }
     }
+    public boolean hay(int num){
+        for(int i=1;i<=cantidadDeDados;i++){
+            if(dados.get(i-1).getValor()==num){
+                return true;
+            }
+        }return false;
+    }
+    public int getCantidad(int num){
+        int can=0;
+        for(int i=1;i<=cantidadDeDados;i++){
+            if(dados.get(i-1).getValor()==num){
+                can++;
+            }
+        }
+        return can;
+    }
+    public boolean hayEscalera(){
+        return false;
+    }
     
     @Override
     public String toString() {

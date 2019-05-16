@@ -33,6 +33,7 @@ public class Partida {
         switch (accion[2]){
             case Constantes.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
             case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3]); break;
+            case Constantes.LISTA_DE_JUGADAS: juegoEnviarListaJugadas(socketInfo,accion[3]); break;
         }
     }
     private void juegoGenerarDados(String cubile){
@@ -44,10 +45,15 @@ public class Partida {
     }
     
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada){
-        server.sendMensaje(siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
+        server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
         actualizarTablero(jugada);
     }
     
+    private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile){
+        Gson json=new Gson();
+        cubilete=json.fromJson(cubile,Cubilete.class);
+        String lista=getListaPosibleJugadas();
+    }
     //UTILS
     private TSocketInfo siguiente(TSocketInfo socket){
         int pos=0;
@@ -59,8 +65,9 @@ public class Partida {
         if(pos==listaJugadores.size()){
             pos=0;
         }
-        return listaJugadores.get(pos).socketJugador;
+        return listaJugadores.get(pos).getSocketJugador();
     }
+    
     private void agitarCubilete(){
         for (int in = 1; in <= 5; in++) {
             if (!cubilete.getDado(in - 1).fueElegido()) {
@@ -68,12 +75,22 @@ public class Partida {
             }
         }
     }
-    private String getListaPosibleJugadas(String dados){
+    
+    private String getListaPosibleJugadas(){
+        String jugadas="";
+        for(int i=1;i<=6;i++){
+            if(cubilete.hay(i)){
+                jugadas=jugadas+Integer.toString(cubilete.getCantidad(i)*i)+"al"+i+"_";
+            }
+        }
+        if(cubilete.hayEscalera()){
+            jugadas=jugadas+"escalera_";
+        }
         return "j1,j2,j3,j4,j5";
     }
-    private void actualizarTablero(String jugada){
-        
-    }
+    
+    private void actualizarTablero(String jugada){}
+    
     private int random(int a, int b){
         Random r = new Random();
         int result = r.nextInt(b-a) + a;
