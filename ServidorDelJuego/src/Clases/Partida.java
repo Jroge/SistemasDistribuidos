@@ -11,6 +11,7 @@ public class Partida {
     public TSServerServidorSocket server;
     public LinkedList<Jugador> listaJugadores;
     private Cubilete cubilete;
+    private Tablero tablero;
     
     public Partida(TSServerServidorSocket newServer) {
         listaJugadores=new LinkedList<>();
@@ -32,7 +33,7 @@ public class Partida {
         String[] accion = mensaje.split("_");
         switch (accion[2]){
             case Constantes.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
-            case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3]); break;
+            case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3],accion[4]); break;
             case Constantes.LISTA_DE_JUGADAS: juegoEnviarListaJugadas(socketInfo,accion[3]); break;
             case Constantes.NOMBRE_JUGADOR_EN_TURNO:juegoEnviarNombreJugadorEnTurno(accion[3]);break;
         }
@@ -45,9 +46,9 @@ public class Partida {
         server.sendMensajeTodos(Constantes.JUEGO+Constantes.MOSTRAR_DADOS+"_"+cad);
     }
     
-    private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada){
+    private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada,String tableroJSON){
+        actualizarTablero(socketInfo,jugada,tableroJSON);
         server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
-        actualizarTablero(jugada);
     }
     
     private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile){
@@ -79,7 +80,7 @@ public class Partida {
         for (int in = 1; in <= 5; in++) {
             if (!cubilete.getDado(in - 1).fueElegido()) {
                 //GRANDE
-                cubilete.getDado(in-1).setValor(5);
+                //cubilete.getDado(in-1).setValor(5);
                 
                 //FULL
                 //cubilete.getDado(in-1).setValor((in/3)+2);
@@ -91,7 +92,7 @@ public class Partida {
                 //cubilete.getDado(in-1).setValor(in);
                 
                 //RANDOMICO
-                //cubilete.getDado(in - 1).setValor(random(1, 6));
+                cubilete.getDado(in - 1).setValor(random(1, 6));
             }
         }
     }
@@ -104,21 +105,27 @@ public class Partida {
             }
         }
         if(cubilete.hayEscalera()){
-            jugadas=jugadas+Constantes.JUGADA_ESCALERA;
+            jugadas=jugadas+Constantes.JUGADA_ESCALERA+",";
         }
         if(cubilete.hayFull()){
-            jugadas=jugadas+Constantes.JUGADA_FULL;
+            jugadas=jugadas+Constantes.JUGADA_FULL+",";
         }
         if(cubilete.hayPoquer()){
-            jugadas=jugadas+Constantes.JUGADA_POQUER;
+            jugadas=jugadas+Constantes.JUGADA_POQUER+",";
         }
         if(cubilete.hayGrande()){
-            jugadas=jugadas+Constantes.JUGADA_GRANDE;
+            jugadas=jugadas+Constantes.JUGADA_GRANDE+",";
         }
         return jugadas;
     }
     
-    private void actualizarTablero(String jugada){}
+    private void actualizarTablero(TSocketInfo socket,String jugada,String tableroJson){
+        Gson json=new Gson();
+        tablero=json.fromJson(tableroJson, Tablero.class);
+        tablero.setJugada(jugada);
+        tableroJson=json.toJson(tablero);
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_TABLERO+"_"+tableroJson);
+    }
     
     private int random(int a, int b){
         Random r = new Random();

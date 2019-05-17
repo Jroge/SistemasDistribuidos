@@ -2,6 +2,7 @@ package Forms;
 
 import Clases.Constantes;
 import Clases.Cubilete;
+import Clases.Tablero;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import TSocket.TClient.Cliente.TSClientClienteSocket;
@@ -14,6 +15,7 @@ import javax.swing.DefaultListModel;
 public final class FormClienteJuego extends javax.swing.JFrame {
     
     TSClientClienteSocket cliente;
+    Tablero tablero;
     Cubilete cubilete;
     int canTirosRealizados,tamGrande,tamPeque,aux;
     String jugada,miNombre;
@@ -22,6 +24,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     
     public FormClienteJuego() {
         initComponents();
+        tablero=new Tablero();
         miNombre="Jaime";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
@@ -44,8 +47,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         Timer timer=new Timer();
                         TimerTask tarea = new TimerTask() {
                             @Override
-                            public void run() {
-                                
+                            public void run() {                                
                                 if (canTirosRealizados == 3) {
                                     todosSeleccionados();
                                     if(enTurno){
@@ -615,12 +617,14 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         }
         Gson json=new Gson();
         String cubileteJSON=json.toJson(cubilete);
+        String tableroJSON=json.toJson(tablero);
         if(puedePedirJugadas){
             cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+cubileteJSON);
         }else if (canTirosRealizados <= 2) {
             cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+"_"+cubileteJSON);
         }else{
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada);
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada+"_"+tableroJSON);
+            jugada="";
             actualizarListaJugadas("");
             enTurno=false;
         }
@@ -648,7 +652,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     }//GEN-LAST:event_imagenDado5MouseClicked
 
     private void listaJugadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaJugadasMouseClicked
-        if(enTurno){
+        if(enTurno&&canTirosRealizados==3){
             botonLanzar.setText("CONFIRMAR JUGADA");
             botonLanzar.setEnabled(true);
             jugada=listaJugadas.getSelectedValue();
@@ -760,15 +764,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         DefaultListModel listModelJugadores = new DefaultListModel();
         String[] jugadas = list.split(",");
         for(int i=1;i<=jugadas.length;i++){
-            if(!jugadas[i-1].contains(" al ")){
+            if(jugadas[i-1].contains(" al ")){
+                listModelJugadores.addElement(jugadas[i-1]);
+            }else{
                 if(jugadas[i-1].equals(Constantes.JUGADA_GRANDE)&&
                         jugada.equals(Constantes.JUGADA_DE_MANO)){
                     listModelJugadores.addElement(Constantes.JUGADA_DORMIDA);
                 }else{
                     listModelJugadores.addElement(jugadas[i-1]+Constantes.JUGADA_DE_MANO);
                 }
-            }else{
-                listModelJugadores.addElement(jugadas[i-1]);
             }
         }
         listaJugadas.setModel(listModelJugadores);
