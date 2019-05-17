@@ -16,12 +16,13 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     TSClientClienteSocket cliente;
     Cubilete cubilete;
     int canTirosRealizados,tamGrande,tamPeque,aux;
-    String jugada;
+    String jugada,miNombre;
     boolean enTurno,puedePedirJugadas;
     boolean[] modificable;
     
     public FormClienteJuego() {
         initComponents();
+        miNombre="Jaime";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
@@ -36,6 +37,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                 switch(msj[2]){
                     case Constantes.MOSTRAR_DADOS:
                         canTirosRealizados++;
+                        aux=canTirosRealizados;
                         setCubilete(msj[3]);
                         actualizarDados();
                         mostrarGif();
@@ -61,6 +63,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         timer.schedule(tarea, 1000, 1000);
                         break;
                     case Constantes.ES_TU_TURNO:
+                        cliente.sendMensaje(Constantes.JUEGO+Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
                         enTurno=true;
                         botonLanzar.setEnabled(true);
                         canTirosRealizados=0;
@@ -71,6 +74,9 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         actualizarListaJugadas(msj[3]);
                         puedePedirJugadas = false;
                         botonLanzar.setText("SELECCIONAR JUGADA");
+                        break;
+                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:
+                        jugadorEnTurno.setText(msj[3]);
                         break;
                 }
             }
@@ -108,24 +114,29 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         imagenDado3 = new javax.swing.JLabel();
         imagenDado4 = new javax.swing.JLabel();
         imagenDado5 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jugadorEnTurno = new javax.swing.JLabel();
+        jugador5 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
         tableroJugador1 = new javax.swing.JTable();
         jScrollPane9 = new javax.swing.JScrollPane();
-        tableroJugador2 = new javax.swing.JTable();
-        jScrollPane10 = new javax.swing.JScrollPane();
         tableroJugador3 = new javax.swing.JTable();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        tableroJugador2 = new javax.swing.JTable();
         jScrollPane11 = new javax.swing.JScrollPane();
         tableroJugador4 = new javax.swing.JTable();
         jScrollPane12 = new javax.swing.JScrollPane();
         tableroJugador5 = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaJugadas = new javax.swing.JList<>();
+        jugador2 = new javax.swing.JLabel();
+        jugador3 = new javax.swing.JLabel();
+        jugador1 = new javax.swing.JLabel();
+        jugador4 = new javax.swing.JLabel();
+        ultimaJugadaJugador2 = new javax.swing.JLabel();
+        ultimaJugadaJugador3 = new javax.swing.JLabel();
+        ultimaJugadaJugador4 = new javax.swing.JLabel();
+        ultimaJugadaJugador5 = new javax.swing.JLabel();
+        ultimaJugadaJugador1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,35 +185,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel1.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("JUGADOR");
+        jugadorEnTurno.setBackground(new java.awt.Color(153, 153, 0));
+        jugadorEnTurno.setFont(new java.awt.Font("Courier New", 1, 30)); // NOI18N
+        jugadorEnTurno.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugadorEnTurno.setText("jugadorEnTurno");
 
-        jLabel2.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel2.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("JROGE");
-
-        jLabel3.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel3.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("JOSELITO");
-
-        jLabel4.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel4.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("MARCO64");
-
-        jLabel5.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel5.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("JUAN");
-
-        jLabel6.setBackground(new java.awt.Color(153, 153, 0));
-        jLabel6.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("MARTA");
+        jugador5.setBackground(new java.awt.Color(153, 153, 0));
+        jugador5.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
+        jugador5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugador5.setText("jugador5");
 
         tableroJugador1.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
@@ -255,57 +246,6 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             tableroJugador1.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        tableroJugador2.setBackground(new java.awt.Color(247, 193, 152));
-        tableroJugador2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
-        tableroJugador2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "", "", ""
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tableroJugador2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tableroJugador2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tableroJugador2.setDoubleBuffered(true);
-        tableroJugador2.setDragEnabled(true);
-        tableroJugador2.setDropMode(javax.swing.DropMode.ON);
-        tableroJugador2.setFocusable(false);
-        tableroJugador2.setGridColor(new java.awt.Color(0, 0, 0));
-        tableroJugador2.setMinimumSize(new java.awt.Dimension(45, 150));
-        tableroJugador2.setOpaque(false);
-        tableroJugador2.setPreferredSize(new java.awt.Dimension(75, 95));
-        tableroJugador2.setRequestFocusEnabled(false);
-        tableroJugador2.setRowHeight(25);
-        tableroJugador2.setRowSelectionAllowed(false);
-        tableroJugador2.setShowGrid(true);
-        tableroJugador2.setUpdateSelectionOnSort(false);
-        tableroJugador2.setVerifyInputWhenFocusTarget(false);
-        jScrollPane9.setViewportView(tableroJugador2);
-        if (tableroJugador2.getColumnModel().getColumnCount() > 0) {
-            tableroJugador2.getColumnModel().getColumn(0).setResizable(false);
-            tableroJugador2.getColumnModel().getColumn(1).setResizable(false);
-            tableroJugador2.getColumnModel().getColumn(2).setResizable(false);
-        }
-
         tableroJugador3.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
         tableroJugador3.setModel(new javax.swing.table.DefaultTableModel(
@@ -350,11 +290,61 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         tableroJugador3.setShowGrid(true);
         tableroJugador3.setUpdateSelectionOnSort(false);
         tableroJugador3.setVerifyInputWhenFocusTarget(false);
-        jScrollPane10.setViewportView(tableroJugador3);
+        jScrollPane9.setViewportView(tableroJugador3);
         if (tableroJugador3.getColumnModel().getColumnCount() > 0) {
             tableroJugador3.getColumnModel().getColumn(0).setResizable(false);
             tableroJugador3.getColumnModel().getColumn(1).setResizable(false);
             tableroJugador3.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        tableroJugador2.setBackground(new java.awt.Color(247, 193, 152));
+        tableroJugador2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "", "", ""
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableroJugador2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tableroJugador2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tableroJugador2.setDoubleBuffered(true);
+        tableroJugador2.setDragEnabled(true);
+        tableroJugador2.setDropMode(javax.swing.DropMode.ON);
+        tableroJugador2.setFocusable(false);
+        tableroJugador2.setGridColor(new java.awt.Color(0, 0, 0));
+        tableroJugador2.setMinimumSize(new java.awt.Dimension(45, 150));
+        tableroJugador2.setOpaque(false);
+        tableroJugador2.setPreferredSize(new java.awt.Dimension(75, 95));
+        tableroJugador2.setRequestFocusEnabled(false);
+        tableroJugador2.setRowHeight(25);
+        tableroJugador2.setRowSelectionAllowed(false);
+        tableroJugador2.setShowGrid(true);
+        tableroJugador2.setUpdateSelectionOnSort(false);
+        tableroJugador2.setVerifyInputWhenFocusTarget(false);
+        jScrollPane10.setViewportView(tableroJugador2);
+        if (tableroJugador2.getColumnModel().getColumnCount() > 0) {
+            tableroJugador2.getColumnModel().getColumn(0).setResizable(false);
+            tableroJugador2.getColumnModel().getColumn(1).setResizable(false);
+            tableroJugador2.getColumnModel().getColumn(2).setResizable(false);
         }
 
         tableroJugador4.setBackground(new java.awt.Color(247, 193, 152));
@@ -466,107 +456,154 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listaJugadas);
 
+        jugador2.setBackground(new java.awt.Color(153, 153, 0));
+        jugador2.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
+        jugador2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugador2.setText("jugador2");
+        jugador2.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        jugador3.setBackground(new java.awt.Color(153, 153, 0));
+        jugador3.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
+        jugador3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugador3.setText("jugador3");
+
+        jugador1.setBackground(new java.awt.Color(153, 153, 0));
+        jugador1.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
+        jugador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugador1.setText("jugador1");
+
+        jugador4.setBackground(new java.awt.Color(153, 153, 0));
+        jugador4.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
+        jugador4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jugador4.setText("jugador4");
+
+        ultimaJugadaJugador2.setText("ultimaJugadaJugador2");
+
+        ultimaJugadaJugador3.setText("ultimaJugadaJugador3");
+
+        ultimaJugadaJugador4.setText("ultimaJugadaJugador4");
+
+        ultimaJugadaJugador5.setText("ultimaJugadaJugador5");
+
+        ultimaJugadaJugador1.setText("ultimaJugadaJugador1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(20, 20, 20)
+                .addComponent(jugador2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(jugadorEnTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(150, 150, 150)
+                .addComponent(jugador4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ultimaJugadaJugador2))
+                .addGap(140, 140, 140)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(imagenDado1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(imagenDado3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(imagenDado2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(imagenDado5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imagenDado4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(171, 171, 171)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ultimaJugadaJugador4)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jugador3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(540, 540, 540)
+                .addComponent(jugador5, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ultimaJugadaJugador3))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jugador1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(imagenDado1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(42, 42, 42)
-                                .addComponent(imagenDado3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(imagenDado5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(80, 80, 80)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(imagenDado2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(62, 62, 62)
-                                .addComponent(imagenDado4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonLanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(ultimaJugadaJugador1)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(botonLanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ultimaJugadaJugador5)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jugador2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jugadorEnTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jugador4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ultimaJugadaJugador2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ultimaJugadaJugador4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(imagenDado1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(imagenDado3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(39, 39, 39)
+                                .addComponent(imagenDado2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(imagenDado5, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(imagenDado4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jugador3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jugador5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(3, 3, 3)
-                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(imagenDado1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imagenDado3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imagenDado5, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel5)
-                        .addGap(3, 3, 3)
-                        .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel2)
-                        .addGap(3, 3, 3)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ultimaJugadaJugador3))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(imagenDado2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imagenDado4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)
-                        .addComponent(botonLanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(3, 3, 3)
                         .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ultimaJugadaJugador5))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jugador1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(botonLanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ultimaJugadaJugador1)
+                .addContainerGap())
         );
 
         pack();
@@ -790,7 +827,6 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             icon = new ImageIcon(image.getImage().getScaledInstance(
                     tamPeque,tamPeque,Image.SCALE_DEFAULT));    
         }imagenDado5.setIcon(icon);
-        aux=canTirosRealizados;
         if(cubilete.estanTodosElegidos()){
             botonLanzar.setText("VER JUGADAS");
             puedePedirJugadas=true;
@@ -835,23 +871,28 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     private javax.swing.JLabel imagenDado3;
     private javax.swing.JLabel imagenDado4;
     private javax.swing.JLabel imagenDado5;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JLabel jugador1;
+    private javax.swing.JLabel jugador2;
+    private javax.swing.JLabel jugador3;
+    private javax.swing.JLabel jugador4;
+    private javax.swing.JLabel jugador5;
+    private javax.swing.JLabel jugadorEnTurno;
     private javax.swing.JList<String> listaJugadas;
     private javax.swing.JTable tableroJugador1;
     private javax.swing.JTable tableroJugador2;
     private javax.swing.JTable tableroJugador3;
     private javax.swing.JTable tableroJugador4;
     private javax.swing.JTable tableroJugador5;
+    private javax.swing.JLabel ultimaJugadaJugador1;
+    private javax.swing.JLabel ultimaJugadaJugador2;
+    private javax.swing.JLabel ultimaJugadaJugador3;
+    private javax.swing.JLabel ultimaJugadaJugador4;
+    private javax.swing.JLabel ultimaJugadaJugador5;
     // End of variables declaration//GEN-END:variables
 }

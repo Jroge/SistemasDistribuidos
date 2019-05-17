@@ -34,6 +34,7 @@ public class Partida {
             case Constantes.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
             case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3]); break;
             case Constantes.LISTA_DE_JUGADAS: juegoEnviarListaJugadas(socketInfo,accion[3]); break;
+            case Constantes.NOMBRE_JUGADOR_EN_TURNO:juegoEnviarNombreJugadorEnTurno(accion[3]);break;
         }
     }
     private void juegoGenerarDados(String cubile){
@@ -55,6 +56,11 @@ public class Partida {
         String lista=getListaPosibleJugadas();
         server.sendMensaje(socket, Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
     }
+    
+    private void juegoEnviarNombreJugadorEnTurno(String nombre){
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+nombre);
+    }
+
     //UTILS
     private TSocketInfo siguiente(TSocketInfo socket){
         int pos=0;
@@ -81,11 +87,20 @@ public class Partida {
         String jugadas="";
         for(int i=1;i<=6;i++){
             if(cubilete.hay(i)){
-                jugadas=jugadas+Integer.toString(cubilete.getCantidad(i)*i)+" al "+i+",";
+                jugadas=jugadas+Integer.toString(cubilete.cantidadDeDados(i)*i)+" al "+i+",";
             }
         }
         if(cubilete.hayEscalera()){
-            jugadas=jugadas+"escalera,";
+            jugadas=jugadas+"escalera";
+        }
+        if(cubilete.hayFull()){
+            jugadas=jugadas+"full";
+        }
+        if(cubilete.hayPoquer()){
+            jugadas=jugadas+"poquer";
+        }
+        if(cubilete.hayGrande()){
+            jugadas=jugadas+"grande";
         }
         return jugadas;
     }

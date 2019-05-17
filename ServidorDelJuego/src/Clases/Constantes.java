@@ -17,6 +17,7 @@ public class Constantes {
     public static final String LISTA_DE_JUGADAS = "LISTADEJUGADAS";
     public static final String JUGADA_ESCOGIDA = "JUGADAESCOGIDA";
     public static final String ES_TU_TURNO     =  "ESTUTURNO";
+    public static final String NOMBRE_JUGADOR_EN_TURNO = "NOMBREJUGADORENTURNO";
     
     public static final String JUEGO = "S_JUEGO_";
 }

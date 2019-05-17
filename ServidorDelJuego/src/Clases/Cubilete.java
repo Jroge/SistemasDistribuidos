@@ -56,7 +56,7 @@ public class Cubilete {
             }
         }return false;
     }
-    public int getCantidad(int num){
+    public int cantidadDeDados(int num){
         int can=0;
         for(int i=1;i<=cantidadDeDados;i++){
             if(dados.get(i-1).getValor()==num){
@@ -66,7 +66,51 @@ public class Cubilete {
         return can;
     }
     public boolean hayEscalera(){
-        return false;
+        LinkedList<Dado>ordenados=ordenar();
+        boolean b=false;
+        for(int i=1;i<=cantidadDeDados-1;i++){
+            if(ordenados.get(i-1).getValor()+1!=ordenados.get(i).getValor()){
+                if(ordenados.get(i-1).getValor()!=1||b){
+                    return false;
+                }
+                b=true;
+            }
+        }
+        return true;
+    }
+    public boolean hayFull(){
+        for(int i=1;i<=cantidadDeDados;i++){
+            int x=dados.get(i-1).getValor();
+            if(cantidadDeDados(x)!=3&&cantidadDeDados(x)!=2){
+                return false;
+            }
+        }return true;
+    }
+    public boolean hayPoquer(){
+        int num=0;
+        for(int i=1;i<=cantidadDeDados;i++){
+            int x=dados.get(i-1).getValor();
+            if(cantidadDeDados(x)==1&&num==0){
+                num=x;
+            }else if(cantidadDeDados(x)<4){
+                return false;
+            }
+        }return true;
+    }
+    public boolean hayGrande(){
+        return cantidadDeDados(dados.get(0).getValor())==5;
+    }
+    private LinkedList<Dado> ordenar(){
+        LinkedList<Dado> nuevaListaOrdenada=dados;
+        for(int i=1;i<cantidadDeDados;i++){
+            for(int j=i+1;j<=cantidadDeDados;j++){
+                if(nuevaListaOrdenada.get(j-1).getValor()<nuevaListaOrdenada.get(i-1).getValor()){
+                    int aux=nuevaListaOrdenada.get(i-1).getValor();
+                    nuevaListaOrdenada.get(i-1).setValor(nuevaListaOrdenada.get(j-1).getValor());
+                    nuevaListaOrdenada.get(j-1).setValor(aux);
+                }
+            }
+        }return nuevaListaOrdenada;
     }
     
     @Override
