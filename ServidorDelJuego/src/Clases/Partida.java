@@ -53,6 +53,7 @@ public class Partida {
         Gson json=new Gson();
         cubilete=json.fromJson(cubile,Cubilete.class);
         String lista=getListaPosibleJugadas();
+        server.sendMensaje(socket, Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
     }
     //UTILS
     private TSocketInfo siguiente(TSocketInfo socket){
@@ -80,13 +81,13 @@ public class Partida {
         String jugadas="";
         for(int i=1;i<=6;i++){
             if(cubilete.hay(i)){
-                jugadas=jugadas+Integer.toString(cubilete.getCantidad(i)*i)+"al"+i+"_";
+                jugadas=jugadas+Integer.toString(cubilete.getCantidad(i)*i)+" al "+i+",";
             }
         }
         if(cubilete.hayEscalera()){
-            jugadas=jugadas+"escalera_";
+            jugadas=jugadas+"escalera,";
         }
-        return "j1,j2,j3,j4,j5";
+        return jugadas;
     }
     
     private void actualizarTablero(String jugada){}

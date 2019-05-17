@@ -31,10 +31,17 @@ public class Cubilete {
     public boolean estaVacio(){
         return dados.isEmpty();
     }
-    public void elegirTodos(){
+    public void seleccionarTodos(){
         for(int i=1;i<=cantidadDeDados;i++){
             dados.get(i-1).setFueElegido(true);
         }
+    }
+    public boolean todosSeleccionados(){
+        for(int i=1;i<=cantidadDeDados;i++){
+            if(!dados.get(i-1).fueElegido()){
+                return false;
+            }
+        }return true;
     }
     public boolean estanTodosElegidos(){
         for(int i=1;i<=cantidadDeDados;i++){

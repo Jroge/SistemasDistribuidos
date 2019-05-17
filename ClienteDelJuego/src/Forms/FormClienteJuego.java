@@ -9,20 +9,23 @@ import TSocket.TClient.Cliente.TSocketInfo;
 import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.DefaultListModel;
 
 public final class FormClienteJuego extends javax.swing.JFrame {
     
     TSClientClienteSocket cliente;
     Cubilete cubilete;
     int canTirosRealizados,tamGrande,tamPeque,aux;
-    boolean enTurno,puedeElegirJugada;
+    String jugada;
+    boolean enTurno,puedePedirJugadas;
     boolean[] modificable;
     
     public FormClienteJuego() {
         initComponents();
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
-        mostrarDadosIniciales();        
+        mostrarDadosIniciales();
+        canTirosRealizados=0;
         //cliente = new TSClientClienteSocket("192.168.43.121",9090){//ELITO
         //cliente = new TSClientClienteSocket("192.168.1.104",9090){//JROGE
         cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
@@ -32,25 +35,27 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                 String[] msj=mensaje.split("_");
                 switch(msj[2]){
                     case Constantes.MOSTRAR_DADOS:
+                        canTirosRealizados++;
                         setCubilete(msj[3]);
-                        //AÑADIR CAMBIO DE TAMAÑO POR DADOactualizarDados();
+                        actualizarDados();
                         mostrarGif();
                         Timer timer=new Timer();
                         TimerTask tarea = new TimerTask() {
                             @Override
                             public void run() {
-                                timer.cancel();
-                                canTirosRealizados++;
+                                
                                 if (canTirosRealizados == 3) {
                                     todosSeleccionados();
                                     if(enTurno){
                                         botonLanzar.setText("VER JUGADAS");
+                                        puedePedirJugadas=true;
                                     }
                                 }
                                 actualizarDados();
                                 if(enTurno){
                                     botonLanzar.setEnabled(true);
                                 }
+                                timer.cancel();
                             }
                         };
                         timer.schedule(tarea, 1000, 1000);
@@ -59,12 +64,12 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         enTurno=true;
                         botonLanzar.setEnabled(true);
                         canTirosRealizados=0;
-                        puedeElegirJugada=false;
+                        puedePedirJugadas=false;
                         botonLanzar.setText("LANZAR DADOS");
                         break;
                     case Constantes.LISTA_DE_JUGADAS:
-                        puedeElegirJugada=true;
-                        botonLanzar.setEnabled(true);
+                        actualizarListaJugadas(msj[3]);
+                        puedePedirJugadas = false;
                         botonLanzar.setText("SELECCIONAR JUGADA");
                         break;
                 }
@@ -119,6 +124,8 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         tableroJugador4 = new javax.swing.JTable();
         jScrollPane12 = new javax.swing.JScrollPane();
         tableroJugador5 = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaJugadas = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -452,6 +459,13 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             tableroJugador5.getColumnModel().getColumn(2).setResizable(false);
         }
 
+        listaJugadas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaJugadasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(listaJugadas);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -499,12 +513,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                                 .addGap(62, 62, 62)
                                 .addComponent(imagenDado4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(botonLanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40)
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -547,7 +564,9 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(3, 3, 3)
-                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
@@ -557,15 +576,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         if (canTirosRealizados == 0) {
             cubilete=new Cubilete();
         }
-        if(puedeElegirJugada){
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS);
+        Gson json=new Gson();
+        String cad=json.toJson(cubilete);
+        if(puedePedirJugadas){
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+cad);
         }else if (canTirosRealizados <= 2) {
-            Gson json=new Gson();
-            String cad=json.toJson(cubilete);
             cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+"_"+cad);
         }else{
-            String jugada="j";
             cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada);
+            actualizarListaJugadas("");
             enTurno=false;
         }
         botonLanzar.setEnabled(false);
@@ -590,6 +609,14 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     private void imagenDado5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenDado5MouseClicked
         if(enTurno&&modificable[4])actualizarImagenDado(5);
     }//GEN-LAST:event_imagenDado5MouseClicked
+
+    private void listaJugadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaJugadasMouseClicked
+        if(enTurno){
+            botonLanzar.setText("CONFIRMAR JUGADA");
+            botonLanzar.setEnabled(true);
+            jugada=listaJugadas.getSelectedValue();
+        }
+    }//GEN-LAST:event_listaJugadasMouseClicked
 
     public void setCubilete(String cubile){
         Gson json=new Gson();
@@ -654,7 +681,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     
     //No altera valores-Si altera tamaños
     public void todosSeleccionados(){
-        cubilete.elegirTodos();
+        cubilete.seleccionarTodos();
         todasImagenesPeque();
     } 
     
@@ -690,6 +717,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         icon = new ImageIcon(image.getImage().getScaledInstance(
                 tamPeque, tamPeque, Image.SCALE_DEFAULT));
         imagenDado5.setIcon(icon);
+    }
+    
+    public void actualizarListaJugadas(String list) {
+        DefaultListModel listModelJugadores = new DefaultListModel();
+        String[] jugadas = list.split(",");
+        for (int i = 1; i <= jugadas.length; i++) {
+            listModelJugadores.addElement(jugadas[i - 1]);
+        }
+        listaJugadas.setModel(listModelJugadores);
     }
     
     //Si altera valores-No altera tamaños
@@ -754,14 +790,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             icon = new ImageIcon(image.getImage().getScaledInstance(
                     tamPeque,tamPeque,Image.SCALE_DEFAULT));    
         }imagenDado5.setIcon(icon);
+        aux=canTirosRealizados;
         if(cubilete.estanTodosElegidos()){
             botonLanzar.setText("VER JUGADAS");
-            puedeElegirJugada=true;
+            puedePedirJugadas=true;
             aux=canTirosRealizados;
             canTirosRealizados=3;
         }else{
             botonLanzar.setText("LANZAR DADOS");
-            puedeElegirJugada=false;
+            puedePedirJugadas=false;
             canTirosRealizados=aux;
         }
     }
@@ -804,11 +841,13 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JList<String> listaJugadas;
     private javax.swing.JTable tableroJugador1;
     private javax.swing.JTable tableroJugador2;
     private javax.swing.JTable tableroJugador3;
