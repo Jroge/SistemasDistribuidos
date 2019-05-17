@@ -614,11 +614,11 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             cubilete=new Cubilete();
         }
         Gson json=new Gson();
-        String cad=json.toJson(cubilete);
+        String cubileteJSON=json.toJson(cubilete);
         if(puedePedirJugadas){
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+cad);
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+cubileteJSON);
         }else if (canTirosRealizados <= 2) {
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+"_"+cad);
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+"_"+cubileteJSON);
         }else{
             cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada);
             actualizarListaJugadas("");
@@ -756,11 +756,20 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         imagenDado5.setIcon(icon);
     }
     
-    public void actualizarListaJugadas(String list) {
+    public void actualizarListaJugadas(String list){
         DefaultListModel listModelJugadores = new DefaultListModel();
         String[] jugadas = list.split(",");
-        for (int i = 1; i <= jugadas.length; i++) {
-            listModelJugadores.addElement(jugadas[i - 1]);
+        for(int i=1;i<=jugadas.length;i++){
+            if(!jugadas[i-1].contains(" al ")){
+                if(jugadas[i-1].equals(Constantes.JUGADA_GRANDE)&&
+                        jugada.equals(Constantes.JUGADA_DE_MANO)){
+                    listModelJugadores.addElement(Constantes.JUGADA_DORMIDA);
+                }else{
+                    listModelJugadores.addElement(jugadas[i-1]+Constantes.JUGADA_DE_MANO);
+                }
+            }else{
+                listModelJugadores.addElement(jugadas[i-1]);
+            }
         }
         listaJugadas.setModel(listModelJugadores);
     }
@@ -829,11 +838,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         }imagenDado5.setIcon(icon);
         if(cubilete.estanTodosElegidos()){
             botonLanzar.setText("VER JUGADAS");
+            if(canTirosRealizados==1){
+                jugada=Constantes.JUGADA_DE_MANO;
+            }
             puedePedirJugadas=true;
             aux=canTirosRealizados;
             canTirosRealizados=3;
         }else{
             botonLanzar.setText("LANZAR DADOS");
+            jugada="";
             puedePedirJugadas=false;
             canTirosRealizados=aux;
         }

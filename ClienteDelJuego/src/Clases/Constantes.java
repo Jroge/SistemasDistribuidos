@@ -18,6 +18,12 @@ public class Constantes {
     public static final String JUGADA_ESCOGIDA = "JUGADAESCOGIDA";
     public static final String ES_TU_TURNO     =  "ESTUTURNO";
     public static final String NOMBRE_JUGADOR_EN_TURNO = "NOMBREJUGADORENTURNO";
+    public static final String JUGADA_ESCALERA="Escalera";
+    public static final String JUGADA_FULL="Full";
+    public static final String JUGADA_POQUER="Poquer";
+    public static final String JUGADA_GRANDE="Grande";
+    public static final String JUGADA_DORMIDA="Dormida";
+    public static final String JUGADA_DE_MANO=" de Mano";
     
     public static final String JUEGO = "S_JUEGO_";
 }

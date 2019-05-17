@@ -78,7 +78,20 @@ public class Partida {
     private void agitarCubilete(){
         for (int in = 1; in <= 5; in++) {
             if (!cubilete.getDado(in - 1).fueElegido()) {
-                cubilete.getDado(in - 1).setValor(random(1, 6));
+                //GRANDE
+                cubilete.getDado(in-1).setValor(5);
+                
+                //FULL
+                //cubilete.getDado(in-1).setValor((in/3)+2);
+                
+                //POQUER
+                //cubilete.getDado(in-1).setValor((in/5)+2);
+                
+                //ESCALERA
+                //cubilete.getDado(in-1).setValor(in);
+                
+                //RANDOMICO
+                //cubilete.getDado(in - 1).setValor(random(1, 6));
             }
         }
     }
@@ -91,16 +104,16 @@ public class Partida {
             }
         }
         if(cubilete.hayEscalera()){
-            jugadas=jugadas+"escalera";
+            jugadas=jugadas+Constantes.JUGADA_ESCALERA;
         }
         if(cubilete.hayFull()){
-            jugadas=jugadas+"full";
+            jugadas=jugadas+Constantes.JUGADA_FULL;
         }
         if(cubilete.hayPoquer()){
-            jugadas=jugadas+"poquer";
+            jugadas=jugadas+Constantes.JUGADA_POQUER;
         }
         if(cubilete.hayGrande()){
-            jugadas=jugadas+"grande";
+            jugadas=jugadas+Constantes.JUGADA_GRANDE;
         }
         return jugadas;
     }
