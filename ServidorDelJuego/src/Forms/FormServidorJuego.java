@@ -162,7 +162,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
             listaMisConectados.forEach((socket)->{
                 partida.addNuevoJugador(socket);});
             partida.administrarJuego(partida.listaJugadores.getLast().socketJugador,
-                    Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_j_j");
+                    Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_0 al 1_null");
         }else{
             System.out.println("NO HAY JUGADORES");
         }

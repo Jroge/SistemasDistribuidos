@@ -25,7 +25,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     public FormClienteJuego() {
         initComponents();
         tablero=new Tablero();
-        miNombre="Jaime";
+        miNombre="ELITO";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
@@ -65,6 +65,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         timer.schedule(tarea, 1000, 1000);
                         break;
                     case Constantes.ES_TU_TURNO:
+                        mostrarDadosIniciales();
                         cliente.sendMensaje(Constantes.JUEGO+Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
                         enTurno=true;
                         botonLanzar.setEnabled(true);
@@ -626,6 +627,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_"+jugada+"_"+tableroJSON);
             jugada="";
             actualizarListaJugadas("");
+            mostrarDadosIniciales();
             enTurno=false;
         }
         botonLanzar.setEnabled(false);
@@ -770,8 +772,10 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                 if(jugadas[i-1].equals(Constantes.JUGADA_GRANDE)&&
                         jugada.equals(Constantes.JUGADA_DE_MANO)){
                     listModelJugadores.addElement(Constantes.JUGADA_DORMIDA);
-                }else{
+                }else if(jugada.equals(Constantes.JUGADA_DE_MANO)){
                     listModelJugadores.addElement(jugadas[i-1]+Constantes.JUGADA_DE_MANO);
+                }else{
+                    listModelJugadores.addElement(jugadas[i-1]);
                 }
             }
         }

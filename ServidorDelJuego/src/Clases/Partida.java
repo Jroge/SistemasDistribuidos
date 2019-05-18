@@ -47,7 +47,9 @@ public class Partida {
     }
     
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada,String tableroJSON){
-        actualizarTablero(socketInfo,jugada,tableroJSON);
+        if(tableroJSON!="null"){
+            actualizarTablero(socketInfo,jugada,tableroJSON);
+        }
         server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
     }
     
@@ -66,9 +68,10 @@ public class Partida {
     private TSocketInfo siguiente(TSocketInfo socket){
         int pos=0;
         for(int in=1;in<=listaJugadores.size();in++){
-            if(socket.equals(listaJugadores.get(in-1).getSocketJugador())){
+            if(socket.getHoraDeConexion().equals(listaJugadores.get(in-1).getSocketJugador().getHoraDeConexion())){
                 pos=in;
             }
+            System.out.println(in);
         }
         if(pos==listaJugadores.size()){
             pos=0;
@@ -120,12 +123,12 @@ public class Partida {
     }
     
     private void actualizarTablero(TSocketInfo socket,String jugada,String tableroJson){
-        Gson json=new Gson();
+        /*Gson json=new Gson();
         tablero=json.fromJson(tableroJson, Tablero.class);
         tablero.setJugada(jugada);
         tableroJson=json.toJson(tablero);
         server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_TABLERO+"_"+tableroJson);
-    }
+    */}
     
     private int random(int a, int b){
         Random r = new Random();
