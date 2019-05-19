@@ -1,6 +1,7 @@
 package Forms;
 
 import Clases.Constantes;
+import Clases.Jugador;
 import Clases.Cubilete;
 import Clases.Tablero;
 import java.awt.Image;
@@ -8,6 +9,7 @@ import javax.swing.ImageIcon;
 import TSocket.TClient.Cliente.TSClientClienteSocket;
 import TSocket.TClient.Cliente.TSocketInfo;
 import com.google.gson.Gson;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
@@ -18,14 +20,15 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     Tablero tablero;
     Cubilete cubilete;
     int canTirosRealizados,tamGrande,tamPeque,aux;
-    String jugada,miNombre;
+    String jugada,miNombre,miId;
     boolean enTurno,puedePedirJugadas;
     boolean[] modificable;
     
     public FormClienteJuego() {
         initComponents();
         tablero=new Tablero();
-        miNombre="ELITO";
+        miNombre="Danilo";
+        miId="null";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
@@ -35,7 +38,6 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
             public void onRead(String mensaje){
-                System.out.println(mensaje);
                 String[] msj=mensaje.split("_");
                 switch(msj[2]){
                     case Constantes.MOSTRAR_DADOS:
@@ -80,6 +82,13 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                         break;
                     case Constantes.NOMBRE_JUGADOR_EN_TURNO:
                         jugadorEnTurno.setText(msj[3]);
+                        break;
+                    case Constantes.NUEVO_ID:
+                        miId=msj[3];
+                        cliente.sendMensaje(Constantes.JUEGO+Constantes.NUEVO_NOMBRE+"_"+miNombre);
+                        break;
+                    case Constantes.NOMBRE_JUGADORES:
+                        actualizarNombresJugadores(msj[3]);
                         break;
                 }
             }
@@ -857,6 +866,79 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             jugada="";
             puedePedirJugadas=false;
             canTirosRealizados=aux;
+        }
+    }
+    public void actualizarNombresJugadores(String lista){
+        Gson json=new Gson();
+        LinkedList listaJugadores= json.fromJson(lista,LinkedList.class);
+        jugador1.setText(miNombre);
+        jugador2.setText("");
+        tableroJugador2.setVisible(false);
+        jugador3.setText("");
+        tableroJugador3.setVisible(false);
+        jugador4.setText("");
+        tableroJugador4.setVisible(false);
+        jugador5.setText("");
+        tableroJugador5.setVisible(false);
+        for (int i = 1; i <= listaJugadores.size(); i++) {
+            String[] cosas = listaJugadores.get(i - 1).toString().split(", ");
+            String[] jugadorNum = cosas[0].split("=");
+            String[] jugadorNom = cosas[1].split("=");
+            String[] num = jugadorNum[1].split("r");
+            String nom = jugadorNom[1];
+            nom=nom.substring(0,nom.length()-1);
+            int numero = Integer.parseInt(num[1]);
+            String[] miNum = miId.split("r");
+            int miNumero = Integer.parseInt(miNum[1]);
+            int dif=miNumero-numero;
+            System.out.println(dif+nom);
+            if(dif>0){
+                switch(dif){
+                    case 1:
+                        jugador3.setText(nom);
+                        jugador3.setVisible(true);
+                        tableroJugador3.setVisible(true);
+                        break;
+                    case 2:
+                        jugador2.setText(nom);
+                        jugador2.setVisible(true);
+                        tableroJugador2.setVisible(true);
+                        break;
+                    case 3:
+                        jugador4.setText(nom);
+                        jugador4.setVisible(true);
+                        tableroJugador4.setVisible(true);
+                        break;
+                    case 4:
+                        jugador5.setText(nom);
+                        jugador5.setVisible(true);
+                        tableroJugador5.setVisible(true);
+                        break;
+                }
+            }else if(dif<0){
+                switch(dif){
+                    case -1:
+                        jugador5.setText(nom);
+                        jugador5.setVisible(true);
+                        tableroJugador5.setVisible(true);
+                        break;
+                    case -2:
+                        jugador4.setText(nom);
+                        jugador4.setVisible(true);
+                        tableroJugador4.setVisible(true);
+                        break;
+                    case -3:
+                        jugador2.setText(nom);
+                        jugador2.setVisible(true);
+                        tableroJugador2.setVisible(true);
+                        break;
+                    case -4:
+                        jugador3.setText(nom);
+                        jugador3.setVisible(true);
+                        tableroJugador3.setVisible(true);
+                        break;
+                }
+            }
         }
     }
     

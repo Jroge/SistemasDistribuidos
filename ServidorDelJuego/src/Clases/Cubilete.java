@@ -69,6 +69,9 @@ public class Cubilete {
         LinkedList<Dado>ordenados=ordenar();
         boolean b=false;
         for(int i=1;i<=cantidadDeDados-1;i++){
+            if(cantidadDeDados(ordenados.get(i-1).getValor())!=1){
+                return false;
+            }
             if(ordenados.get(i-1).getValor()+1!=ordenados.get(i).getValor()){
                 if(ordenados.get(i-1).getValor()!=1||b){
                     return false;

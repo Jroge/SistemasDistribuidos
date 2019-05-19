@@ -161,8 +161,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
         if(!listaMisConectados.isEmpty()){
             listaMisConectados.forEach((socket)->{
                 partida.addNuevoJugador(socket);});
-            partida.administrarJuego(partida.listaJugadores.getLast().socketJugador,
-                    Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+"_0 al 1_null");
+            partida.administrarJuego(null,Constantes.JUEGO+Constantes.INICAR_PARTIDA);
         }else{
             System.out.println("NO HAY JUGADORES");
         }
@@ -184,7 +183,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
     public void modificarListaJugadores(){
         DefaultListModel listModelJugadores = new DefaultListModel();
         partida.listaJugadores.forEach((jugador)->{
-            listModelJugadores.addElement(jugador.getNombre());});
+            listModelJugadores.addElement(jugador.getId());});
         listaJugadores.setModel(listModelJugadores);
     }
     

@@ -9,19 +9,21 @@ import TSocket.TSocketInfo;
 
 /**
  *
- * @author PC
+ * @Jroge
  */
 public class Jugador {
     
     public TSocketInfo socketJugador;
+    public String id;
     public String nombre;
     
     public Jugador(){
-        nombre="nombre";
+        id="nombre";
     }
-    public Jugador(TSocketInfo socket,String nuevoNombre){
+    public Jugador(TSocketInfo socket,String nuevoId){
         socketJugador=socket;
-        nombre=nuevoNombre;
+        id=nuevoId;
+        nombre=" ";
     }
 
     public TSocketInfo getSocketJugador() {
@@ -29,6 +31,12 @@ public class Jugador {
     }
     public void setSocketJugador(TSocketInfo socketJugador) {
         this.socketJugador = socketJugador;
+    }
+    public String getId() {
+        return id;
+    }
+    public void setId(String nombre) {
+        this.id = nombre;
     }
     public String getNombre() {
         return nombre;

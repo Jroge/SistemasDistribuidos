@@ -25,6 +25,12 @@ public class Constantes {
     public static final String JUGADA_GRANDE="Grande";
     public static final String JUGADA_DORMIDA="Dormida";
     public static final String JUGADA_DE_MANO=" de Mano";
+    public static final String INICAR_PARTIDA="INICIARPARTIDA";
+    public static final String NUEVO_ID="NUEVOID";
+    public static final String JUGADOR="Jugador";
+    public static final String NUEVO_NOMBRE="NUEVONOMBRE";
+    public static final String SOLICITAR_NOMBRE_JUGADORES="SOLICITARNOMBREJUGADORES";
+    public static final String NOMBRE_JUGADORES="NOMBREJUGADORES";
     
     public static final String JUEGO = "S_JUEGO_";
 }
