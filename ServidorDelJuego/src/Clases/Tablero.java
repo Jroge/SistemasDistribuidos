@@ -120,13 +120,13 @@ public class Tablero {
                 setEscalera(20+deMano);
             }
             if(jugada.contains(Constantes.JUGADA_FULL)){
-                setEscalera(30+deMano);
+                setFull(30+deMano);
             }
             if(jugada.contains(Constantes.JUGADA_POQUER)){
-                setEscalera(40+deMano);
+                setPoquer(40+deMano);
             }
             if(jugada.contains(Constantes.JUGADA_GRANDE)){
-                setEscalera(50);
+                setGrande(50);
             }
             if(jugada.contains(Constantes.JUGADA_DORMIDA)){
                 llenarTodoAlMaximo();
@@ -135,8 +135,18 @@ public class Tablero {
     }
     
     public void llenarTodoAlMaximo(){
-        uno=5;dos=10;tres=15;cuatro=20;cinco=25;seis=30;escalera=25;full=35;poquer=45;grande=50;
+        setAlUno(5);
+        setAlDos(10);
+        setAlTres(15);
+        setAlCuatro(20);
+        setAlCinco(25);
+        setAlSeis(30);
+        setEscalera(25);
+        setFull(35);
+        setPoquer(45);
+        setGrande(50);
     }
+    
     public int getTotal(){
         return total;
     }

@@ -67,8 +67,7 @@ public class Partida {
             LinkedList<Jugador> lista = listaJugadoresSinSocket();
             String listaJ = json.toJson(lista);
             server.sendMensajeTodos(Constantes.JUEGO + Constantes.NOMBRE_JUGADORES
-                    + "_" + listaJ);
-            server.sendMensaje(listaJugadores.getFirst().getSocketJugador(),Constantes.JUEGO+Constantes.ES_TU_TURNO);
+                   +"_"+listaJ);
         }
     }
     
@@ -81,10 +80,8 @@ public class Partida {
     }
     
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada,String tableroJSON){
-        if(!tableroJSON.equals("null")){
-            actualizarTablero(socketInfo,jugada,tableroJSON);
-        }
         server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
+        actualizarTablero(socketInfo,jugada,tableroJSON);
     }
     
     private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile){
@@ -175,14 +172,6 @@ public class Partida {
         Random r = new Random();
         int result = r.nextInt(b-a) + a;
         return result;
-    }
-    
-    private boolean todosJugadoresTienenNombre(){
-        for(int i=1;i<=listaJugadores.size();i++){
-            if(listaJugadores.get(i-1).getNombre().equals(" ")){
-                return false;
-            }
-        }return true;
     }
     
     private LinkedList<Jugador> listaJugadoresSinSocket(){
