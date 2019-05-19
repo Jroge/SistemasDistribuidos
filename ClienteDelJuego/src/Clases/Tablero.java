@@ -16,6 +16,47 @@ public class Tablero {
     public Tablero(){
         uno=dos=tres=cuatro=cinco=seis=escalera=full=poquer=grande=total=0;
     }
+
+    public int getUno() {
+        return uno;
+    }
+
+    public int getDos() {
+        return dos;
+    }
+
+    public int getTres() {
+        return tres;
+    }
+
+    public int getCuatro() {
+        return cuatro;
+    }
+
+    public int getCinco() {
+        return cinco;
+    }
+
+    public int getSeis() {
+        return seis;
+    }
+
+    public int getEscalera() {
+        return escalera;
+    }
+
+    public int getFull() {
+        return full;
+    }
+
+    public int getPoquer() {
+        return poquer;
+    }
+
+    public int getGrande() {
+        return grande;
+    }
+    
     
     public void setAlUno(int valor){
         uno=valor;

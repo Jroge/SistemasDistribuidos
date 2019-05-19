@@ -16,6 +16,47 @@ public class Tablero {
     public Tablero(){
         uno=dos=tres=cuatro=cinco=seis=escalera=full=poquer=grande=total=0;
     }
+
+    public int getUno() {
+        return uno;
+    }
+
+    public int getDos() {
+        return dos;
+    }
+
+    public int getTres() {
+        return tres;
+    }
+
+    public int getCuatro() {
+        return cuatro;
+    }
+
+    public int getCinco() {
+        return cinco;
+    }
+
+    public int getSeis() {
+        return seis;
+    }
+
+    public int getEscalera() {
+        return escalera;
+    }
+
+    public int getFull() {
+        return full;
+    }
+
+    public int getPoquer() {
+        return poquer;
+    }
+
+    public int getGrande() {
+        return grande;
+    }
+    
     
     public void setAlUno(int valor){
         uno=valor;
@@ -71,9 +112,28 @@ public class Tablero {
                 case 6:setAlSeis(valor);break;
             }
         }else{
-            
+            int deMano=0;
+            if(jugada.contains(Constantes.JUGADA_DE_MANO)){
+                deMano=5;
+            }
+            if(jugada.contains(Constantes.JUGADA_ESCALERA)){
+                setEscalera(20+deMano);
+            }
+            if(jugada.contains(Constantes.JUGADA_FULL)){
+                setEscalera(30+deMano);
+            }
+            if(jugada.contains(Constantes.JUGADA_POQUER)){
+                setEscalera(40+deMano);
+            }
+            if(jugada.contains(Constantes.JUGADA_GRANDE)){
+                setEscalera(50);
+            }
+            if(jugada.contains(Constantes.JUGADA_DORMIDA)){
+                llenarTodoAlMaximo();
+            }
         }
     }
+    
     public void llenarTodoAlMaximo(){
         uno=5;dos=10;tres=15;cuatro=20;cinco=25;seis=30;escalera=25;full=35;poquer=45;grande=50;
     }

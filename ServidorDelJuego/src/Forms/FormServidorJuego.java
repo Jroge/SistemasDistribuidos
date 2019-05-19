@@ -115,7 +115,6 @@ public class FormServidorJuego extends javax.swing.JFrame {
            @Override
            public void onConnect(TSocketInfo socketInfo){
                System.out.println("Nueva Conexion Desde: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
-               listaMisConectados.remove(socketInfo);
                listaMisConectados.addLast(socketInfo);
                modificarListaConectados();
            }
@@ -123,6 +122,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
            public void onDisconnect(TSocketInfo socketInfo){
                 System.out.println("Se Desconectó: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
                 listaMisConectados.remove(socketInfo);
+                partida.eliminarJugador(socketInfo);
                 modificarListaConectados();
            }
            @Override
