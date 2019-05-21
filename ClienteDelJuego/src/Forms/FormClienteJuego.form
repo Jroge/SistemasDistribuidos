@@ -190,51 +190,26 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imagenDado1">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Dado1.jpg"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imagenDado1MouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imagenDado2">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Dado2.png"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imagenDado2MouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imagenDado3">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Dado3.png"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imagenDado3MouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imagenDado4">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Dado4.png"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imagenDado4MouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imagenDado5">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Dado5.png"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imagenDado5MouseClicked"/>
       </Events>

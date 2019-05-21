@@ -34,8 +34,9 @@ public class Partida {
         switch (accion[2]){
             case Constantes.INICAR_PARTIDA: juegoIniciarPartida(); break;
             case Constantes.GENERAR_DADOS: juegoGenerarDados(accion[3]); break;
+            case Constantes.CAMBIAR_DADO: juegoCambiarDado(accion[3]);break;
             case Constantes.JUGADA_ESCOGIDA: juegoJugadaEscogida(socketInfo, accion[3],accion[4]); break;
-            case Constantes.LISTA_DE_JUGADAS: juegoEnviarListaJugadas(socketInfo,accion[3]); break;
+            case Constantes.LISTA_DE_JUGADAS: juegoEnviarListaJugadas(socketInfo,accion[3],accion[4]); break;
             case Constantes.NOMBRE_JUGADOR_EN_TURNO:juegoEnviarNombreJugadorEnTurno(accion[3]);break;
             case Constantes.NUEVO_NOMBRE: juegoSetNuevoNombre(socketInfo,accion[3]); break;
         }
@@ -70,6 +71,9 @@ public class Partida {
                    +"_"+listaJ);
         }
     }
+    private void juegoCambiarDado(String cubileteJson){
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJson);
+    }
     
     private void juegoGenerarDados(String cubile){
         Gson json=new Gson();
@@ -80,15 +84,23 @@ public class Partida {
     }
     
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada,String tableroJSON){
-        server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
-        actualizarTablero(socketInfo,jugada,tableroJSON);
+        Gson json=new Gson();
+        actualizarTablero(socketInfo,jugada,tablero);
+        tablero=json.fromJson(tableroJSON,Tablero.class);
+        if(tablero.estaLleno()&&esUltimoJugador(socketInfo)){
+            server.sendMensaje(listaJugadores.getFirst().getSocketJugador(),
+                    Constantes.JUEGO+Constantes.TERMINAR_PARTIDA);
+        }else{
+            server.sendMensaje((TSocketInfo)siguiente(socketInfo),Constantes.JUEGO+Constantes.ES_TU_TURNO);
+        }
     }
     
-    private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile){
+    private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile,String tabler){
         Gson json=new Gson();
         cubilete=json.fromJson(cubile,Cubilete.class);
+        tablero=json.fromJson(tabler, Tablero.class);
         String lista=getListaPosibleJugadas();
-        server.sendMensaje(socket, Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
     }
     
     private void juegoEnviarNombreJugadorEnTurno(String nombre){
@@ -125,7 +137,7 @@ public class Partida {
                 //cubilete.getDado(in-1).setValor(in);
                 
                 //RANDOMICO
-                cubilete.getDado(in - 1).setValor(random(1, 6));
+                cubilete.getDado(in - 1).setValor(random(1, 7));
             }
         }
     }
@@ -133,30 +145,48 @@ public class Partida {
     private String getListaPosibleJugadas(){
         String jugadas="";
         for(int i=1;i<=6;i++){
-            if(cubilete.hay(i)){
+            if(cubilete.hay(i)&&tablero.get(i)==0){
                 jugadas=jugadas+Integer.toString(cubilete.cantidadDeDados(i)*i)+" al "+i+",";
             }
         }
-        if(cubilete.hayEscalera()){
+        if(cubilete.hayEscalera()&&tablero.getEscalera()==0){
             jugadas=jugadas+Constantes.JUGADA_ESCALERA+",";
         }
-        if(cubilete.hayFull()){
+        if(cubilete.hayFull()&&tablero.getFull()==0){
             jugadas=jugadas+Constantes.JUGADA_FULL+",";
         }
-        if(cubilete.hayPoquer()){
+        if(cubilete.hayPoquer()&&tablero.getPoquer()==0){
             jugadas=jugadas+Constantes.JUGADA_POQUER+",";
         }
-        if(cubilete.hayGrande()){
+        if(cubilete.hayGrande()&&tablero.getGrande()==0){
             jugadas=jugadas+Constantes.JUGADA_GRANDE+",";
+        }
+        if (jugadas.equals("")) {
+            for (int i = 1; i <= 6; i++) {
+                if (tablero.get(i) == 0) {
+                    jugadas = jugadas+"Borrar los " + i + ",";
+                }
+            }
+            if (tablero.getEscalera() == 0) {
+                jugadas = jugadas + "Borrar "+Constantes.JUGADA_ESCALERA + ",";
+            }
+            if (tablero.getFull() == 0) {
+                jugadas = jugadas + "Borrar "+ Constantes.JUGADA_FULL + ",";
+            }
+            if (tablero.getPoquer() == 0) {
+                jugadas = jugadas + "Borrar "+ Constantes.JUGADA_POQUER + ",";
+            }
+            if (tablero.getGrande() == 0) {
+                jugadas = jugadas + "Borrar "+ Constantes.JUGADA_GRANDE + ",";
+            }
         }
         return jugadas;
     }
     
-    private void actualizarTablero(TSocketInfo socket,String jugada,String tableroJson){
+    private void actualizarTablero(TSocketInfo socket,String jugada,Tablero tablero){
         Gson json=new Gson();
-        tablero=json.fromJson(tableroJson, Tablero.class);
         tablero.setJugada(jugada);
-        tableroJson=json.toJson(tablero);
+        String tableroJson=json.toJson(tablero);
         String idJugador="null";
         for(int i=1;i<=listaJugadores.size();i++){
             if(socket.getHoraDeConexion().equals(listaJugadores.get(i-1).
@@ -164,13 +194,17 @@ public class Partida {
                 idJugador=listaJugadores.get(i-1).getId();
             }
         }
-        server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_TABLERO+"_"+
-                tableroJson+"_"+idJugador);
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_TABLERO_ULTIMA_JUGADA+"_"+
+                tableroJson+"_"+idJugador+"_"+jugada);
+        server.sendMensajeTodos(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_Sin,Jugadas");
     }
     
     private int random(int a, int b){
         Random r = new Random();
         int result = r.nextInt(b-a) + a;
+        if(result>6){
+            result=6;
+        }
         return result;
     }
     
@@ -183,5 +217,9 @@ public class Partida {
             j.setNombre(listaJugadores.get(i-1).getNombre());
             nuevaLista.addLast(j);
         }return nuevaLista;
+    }
+    private boolean esUltimoJugador(TSocketInfo socket){
+        return (listaJugadores.getLast().getSocketJugador().getHoraDeConexion().
+                equals(socket.getHoraDeConexion()));
     }
 }

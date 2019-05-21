@@ -14,7 +14,7 @@ package Clases;
 public class Constantes {
     public static final String GENERAR_DADOS = "GENERARDADOS";
     public static final String MOSTRAR_DADOS = "MOSTRARDADOS";
-    public static final String CAMBIAR_TABLERO = "CAMBIARTABLERO";
+    public static final String CAMBIAR_TABLERO_ULTIMA_JUGADA = "CAMBIARTABLERO";
     public static final String LISTA_DE_JUGADAS = "LISTADEJUGADAS";
     public static final String JUGADA_ESCOGIDA = "JUGADAESCOGIDA";
     public static final String ES_TU_TURNO     =  "ESTUTURNO";
@@ -31,6 +31,8 @@ public class Constantes {
     public static final String NUEVO_NOMBRE="NUEVONOMBRE";
     public static final String SOLICITAR_NOMBRE_JUGADORES="SOLICITARNOMBREJUGADORES";
     public static final String NOMBRE_JUGADORES="NOMBREJUGADORES";
+    public static final String CAMBIAR_DADO="CAMBIARDADO";
+    public static final String TERMINAR_PARTIDA="TERMINARPARTIDA";
     
     public static final String JUEGO = "S_JUEGO_";
 }
