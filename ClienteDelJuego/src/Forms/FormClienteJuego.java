@@ -23,16 +23,17 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     boolean[] modificable;
     LinkedList listaJugadores;
     
-    public FormClienteJuego() {
+    public FormClienteJuego(){
         initComponents();
         tablero=new Tablero();
-        miNombre="Jroge";
+        miNombre="Carlos";
         miId="null";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
         canTirosRealizados=0;
         jugador1.setText(miNombre);
+        //cliente = new TSClientClienteSocket("192.168.43.121",9090){//LOCAL
         cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
             public void onRead(String mensaje){String[] msj=mensaje.split("_");
