@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Clases;
 
 import java.util.LinkedList;
+import java.util.Random;
 
-/**
- *
- * @Jroge
- */
 public class Cubilete {
     
     public LinkedList<Dado> dados;
@@ -22,8 +14,29 @@ public class Cubilete {
             dados.addLast(new Dado(1,false));
         }
     }
-    public Cubilete(LinkedList<Dado> nuevosDados ){
-        this.dados=nuevosDados;
+    public void agitar(){
+        for(int in=1;in<=5;in++){
+            if(!getDado(in-1).fueElegido()){
+                //GRANDE
+                //cubilete.getDado(in-1).setValor(5);
+                //FULL
+                //cubilete.getDado(in-1).setValor((in/3)+2);
+                //POQUER
+                //cubilete.getDado(in-1).setValor((in/5)+2);
+                //ESCALERA
+                //cubilete.getDado(in-1).setValor(in);
+                //RANDOMICO
+                getDado(in-1).setValor(random(1,7));
+            }
+        }
+    }
+    private int random(int a, int b){
+        Random r = new Random();
+        int result = r.nextInt(b-a) + a;
+        if(result>6){
+            result=6;
+        }
+        return result;
     }
     
     public void addDado(Dado nuevoDado){

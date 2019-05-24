@@ -120,10 +120,10 @@ public class FormServidorJuego extends javax.swing.JFrame {
            }
            @Override
            public void onDisconnect(TSocketInfo socketInfo){
-                System.out.println("Se Desconectó: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
                 listaMisConectados.remove(socketInfo);
-                partida.eliminarJugador(socketInfo);
+                partida.deshabilitarJugador(socketInfo);
                 modificarListaConectados();
+                System.out.println("Se Desconectó: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
            }
            @Override
             public void onWrite(TSocketInfo socketInfo, String mensaje, int code){
@@ -161,11 +161,12 @@ public class FormServidorJuego extends javax.swing.JFrame {
         if(!listaMisConectados.isEmpty()){
             listaMisConectados.forEach((socket)->{
                 partida.addNuevoJugador(socket);});
-            partida.administrarJuego(null,Constantes.JUEGO+Constantes.INICAR_PARTIDA);
-        }else{
-            System.out.println("NO HAY JUGADORES");
+            if(partida.listaJugadores.size()>1&&partida.listaJugadores.size()<=5)
+                partida.administrarJuego(null,Constantes.JUEGO+Constantes.INICAR_PARTIDA);
+            else
+                System.out.println("NO HAY JUGADORES");
+            modificarListaJugadores();
         }
-        modificarListaJugadores();
     }//GEN-LAST:event_empezarNuevaPartidaActionPerformed
     
     private void modificarEstadosBotones(){

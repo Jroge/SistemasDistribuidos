@@ -1,21 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Clases;
 
 import TSocket.TSocketInfo;
 
-/**
- *
- * @Jroge
- */
 public class Jugador {
     
     public TSocketInfo socketJugador;
     public String id;
     public String nombre;
+    public boolean enLinea;
     
     public Jugador(){
         id="nombre";
@@ -24,8 +16,18 @@ public class Jugador {
         socketJugador=socket;
         id=nuevoId;
         nombre=" ";
+        enLinea=true;
     }
 
+    public void setEnLinea(){
+        enLinea=true;
+    }
+    public void setNoEnLinea(){
+        enLinea=false;
+    }
+    public boolean getEnLinea(){
+        return enLinea;
+    }
     public TSocketInfo getSocketJugador() {
         return socketJugador;
     }

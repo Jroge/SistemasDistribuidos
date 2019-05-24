@@ -1,4 +1,5 @@
 package Forms;
+
 import Clases.Constantes;
 import Clases.Cubilete;
 import Clases.Tablero;
@@ -7,11 +8,11 @@ import javax.swing.ImageIcon;
 import TSocket.TClient.Cliente.TSClientClienteSocket;
 import TSocket.TClient.Cliente.TSocketInfo;
 import com.google.gson.Gson;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
+
 public final class FormClienteJuego extends javax.swing.JFrame{
     
     TSClientClienteSocket cliente;
@@ -21,31 +22,34 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     String jugada,miNombre,miId;
     boolean enTurno,puedePedirJugadas;
     boolean[] modificable;
-    LinkedList listaJugadores;
+    String[] listaJugadores;
+    Gson json;
     
     public FormClienteJuego(){
         initComponents();
+        json=new Gson();
         tablero=new Tablero();
-        miNombre="Carlos";
+        miNombre="Jroge";
         miId="null";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
         canTirosRealizados=0;
         jugador1.setText(miNombre);
-        //cliente = new TSClientClienteSocket("192.168.43.121",9090){//LOCAL
         cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
-            public void onRead(String mensaje){String[] msj=mensaje.split("_");
-                switch(msj[2]){
-                    case Constantes.CAMBIAR_DADO:cambiarDado(msj[3]);break;
-                    case Constantes.MOSTRAR_DADOS:mostrarDados(msj[3]);break;
+            public void onRead(String mensaje){String[] accion=mensaje.split("_");
+                System.out.println(mensaje);
+                switch(accion[2]){
+                    case Constantes.NUEVO_ID:setMiNuevoId(accion[3]);break;
+                    case Constantes.NOMBRE_JUGADORES:mostrarNombreDeJugadores(accion[3]);break;
                     case Constantes.ES_TU_TURNO:iniciarTurno();break;
-                    case Constantes.LISTA_DE_JUGADAS:mostrarListaDeJugadas(msj[3]);break;
-                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:jugadorEnTurno.setText(msj[3]);break;
-                    case Constantes.NUEVO_ID:setMiNuevoId(msj[3]);break;
-                    case Constantes.NOMBRE_JUGADORES:mostrarNombreDeJugadores(msj[3]);break;
-                    case Constantes.CAMBIAR_TABLERO_ULTIMA_JUGADA:setTablero(msj[3],msj[4],msj[5]);break;
+                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:jugadorEnTurno.setText(accion[3]);break;
+                    case Constantes.MOSTRAR_DADOS:mostrarDados(accion[3]);break;
+                    case Constantes.CAMBIAR_DADO:cambiarDado(accion[3]);break;
+                    case Constantes.LISTA_DE_JUGADAS:mostrarListaDeJugadas(accion[3]);break;
+                    case Constantes.CAMBIAR_TABLERO:setTablero(accion[3],accion[4]);break;
+                    case Constantes.TERMINAR_PARTIDA:mostrarGanadores(accion[3],accion[4]);break;
                 }
             }
             @Override
@@ -484,21 +488,19 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         if (canTirosRealizados == 0) {
             cubilete=new Cubilete();
         }
-        Gson json=new Gson();
         String cubileteJSON=json.toJson(cubilete);
         setTableroDeJugador1();
             String tableroJSON=json.toJson(tablero);
         if(puedePedirJugadas){
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+
-                    "_"+cubileteJSON+"_"+tableroJSON);
+            cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.LISTA_DE_JUGADAS+"_"+cubileteJSON);
         }else if (canTirosRealizados <= 2) {
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.GENERAR_DADOS+
-                    "_"+cubileteJSON);
+            cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.GENERAR_DADOS+"_"+cubileteJSON);
         }else{
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.JUGADA_ESCOGIDA+
-                    "_"+jugada+"_"+tableroJSON);
+            cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.JUGADA_ESCOGIDA+"_"+jugada);
             jugada="";
-            actualizarListaJugadas("");
             mostrarDadosIniciales();
             enTurno=false;
         }
@@ -535,7 +537,8 @@ public final class FormClienteJuego extends javax.swing.JFrame{
 
     private void iniciarTurno(){
         mostrarDadosIniciales();
-        cliente.sendMensaje(Constantes.JUEGO + Constantes.NOMBRE_JUGADOR_EN_TURNO + "_" + miNombre);
+        cliente.sendMensaje(Constantes.JUEGO+
+                Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
         enTurno = true;
         botonLanzar.setEnabled(true);
         canTirosRealizados = 0;
@@ -569,7 +572,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         timer.schedule(tarea, 1000, 1000);
     }
     private void cambiarDado(String cubileteJSON) {
-        Gson json=new Gson();
         cubilete=json.fromJson(cubileteJSON, Cubilete.class);
         actualizarDados();
     }
@@ -616,19 +618,22 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     }
     private void setMiNuevoId(String nuevoId){
         miId = nuevoId;
-        cliente.sendMensaje(Constantes.JUEGO + Constantes.NUEVO_NOMBRE + "_" + miNombre);
+        System.out.println("Mi nuevo Id es: "+miId);
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.NUEVO_NOMBRE+"_"+miNombre);
     }
     private void mostrarNombreDeJugadores(String listaNombres){
         actualizarNombresJugadores(listaNombres);
-        String[] nums = miId.split("r");
+        String[] nums = miId.split("R");
         setEnJugadores(false, Integer.parseInt(nums[1]),"");
-        if(miId.equals("Jugador1")){
+        if(listaJugadores[0].contains(miId)){
             iniciarTurno();
         }
     }
+    private void mostrarGanadores(String listaDeGanadores,String maximaPuntuacion){
+        
+    }
     
     public void setCubilete(String cubile){
-        Gson json=new Gson();
         cubilete=json.fromJson(cubile, Cubilete.class);
         modificable[0]=!cubilete.getDado(0).fueElegido();
         modificable[1]=!cubilete.getDado(1).fueElegido();
@@ -646,11 +651,9 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         if(!cubilete.getDado(3).fueElegido){imagenDado4.setIcon(icon);}
         if(!cubilete.getDado(4).fueElegido){imagenDado5.setIcon(icon);}
     }
-    //Si altera valores-No altera tamaños
     public void actualizarImagenDado(int i){
         boolean b=cubilete.getDado(i-1).fueElegido();
         cubilete.getDado(i-1).setFueElegido(!b);
-        Gson json=new Gson();
         String cubileteJSON=json.toJson(cubilete);
         cliente.sendMensaje(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJSON);
         actualizarDados();
@@ -686,7 +689,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
                 getScaledInstance(tamGrande, tamGrande, Image.SCALE_DEFAULT));
         imagenDado5.setIcon(icon);
     }
-    //No altera valores-Si altera tamaños
     public void todosSeleccionados(){
         cubilete.seleccionarTodos();
         modificable[0]=false;
@@ -696,7 +698,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         modificable[4]=false;
         todasImagenesPeque();
     }
-    //No altera valores-Si altera tamaños
     public void todasImagenesPeque() {
         ImageIcon image;ImageIcon icon;
         image = new ImageIcon(getClass().
@@ -748,7 +749,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         }
         listaJugadas.setModel(listModelJugadores);
     }
-    //Si altera valores-No altera tamaños
     public void actualizarDados() {
         ImageIcon icon;ImageIcon image;
         if(!cubilete.getDado(0).fueElegido()){
@@ -810,7 +810,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
             icon = new ImageIcon(image.getImage().getScaledInstance(
                     tamPeque,tamPeque,Image.SCALE_DEFAULT));    
         }imagenDado5.setIcon(icon);
-        if(cubilete.estanTodosElegidos()){
+        if(cubilete.todosSeleccionados()){
             botonLanzar.setText("VER JUGADAS");
             if(canTirosRealizados==1){
                 jugada=Constantes.JUGADA_DE_MANO;
@@ -826,8 +826,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         }
     }
     public void actualizarNombresJugadores(String lista){
-        Gson json=new Gson();
-        listaJugadores= json.fromJson(lista,LinkedList.class);
+        listaJugadores=lista.split(",");
         ultimaJugadaJugador1.setText("");
         jugador2.setText("");
         tableroJugador2.setVisible(false);
@@ -844,15 +843,12 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         setEnJugadores(true,0,"");
     }
     public void setEnJugadores(boolean ponerNombres,int numJugador,String ultimaJugada){
-        for (int i = 1; i <= listaJugadores.size(); i++) {
-            String[] cosas = listaJugadores.get(i - 1).toString().split(", ");
-            String[] jugadorNum = cosas[0].split("=");
-            String[] jugadorNom = cosas[1].split("=");
-            String[] num = jugadorNum[1].split("r");
-            String nom = jugadorNom[1];
-            nom=nom.substring(0,nom.length()-1);
-            int numero = Integer.parseInt(num[1]);
-            String[] miNum = miId.split("r");
+        for (int i = 1; i <= listaJugadores.length; i++) {
+            String el=listaJugadores[i - 1];
+            String nu=el.substring(7,8);
+            String nom=el.substring(9,el.length());
+            int numero = Integer.parseInt(nu);
+            String[] miNum = miId.split("R");
             int miNumero = Integer.parseInt(miNum[1]);
             int dif=miNumero-numero;
             if(ponerNombres){
@@ -945,9 +941,9 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     }
     public void actualizarTablero(int numTablero,String ultimaJugada){
         DefaultTableModel modelo=new DefaultTableModel();
-        modelo.addColumn("_");
-        modelo.addColumn("_");
-        modelo.addColumn("_");
+        modelo.addColumn("");
+        modelo.addColumn("");
+        modelo.addColumn("");
         String[] filas=new String[3];
         if(tablero.getUno()==0)filas[0]=" ";
         else if(tablero.getUno()==-1)filas[0]="X";
@@ -1016,17 +1012,16 @@ public final class FormClienteJuego extends javax.swing.JFrame{
                 break;
         }
     }
-    public void setTablero(String tableroJSON, String idJugador,String ultimaJugada) {
-        Gson json=new Gson();
-        tablero=json.fromJson(tableroJSON, Tablero.class);
-        String[] num = idJugador.split("r");
+    public void setTablero(String tableroJSON,String idJugador){
+        tablero=json.fromJson(tableroJSON,Tablero.class);
+        String[] num = idJugador.split("R");
         int numero = Integer.parseInt(num[1]);
-        setEnJugadores(false, numero,ultimaJugada);
+        setEnJugadores(false, numero,tablero.getUltimaJugada());
     }
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())){
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
