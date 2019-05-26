@@ -1,7 +1,7 @@
 package Forms;
 
 import Clases.Constantes;
-import Clases.Partida;
+import Clases.Sala;
 import TSocket.TServer.Servidor.TSServerCode;
 import TSocket.TServer.Servidor.TSServerServidorSocket;
 import TSocket.TSocketInfo;
@@ -13,7 +13,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
     private boolean b;
     private TSServerServidorSocket servidor;
     private LinkedList<TSocketInfo> listaMisConectados;
-    private Partida partida;
+    private Sala sala;
     
     public FormServidorJuego() {
         initComponents();
@@ -28,11 +28,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
         IniciarBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaConectados = new javax.swing.JList<>();
-        empezarNuevaPartida = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        listaJugadores = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,18 +48,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(listaConectados);
 
-        empezarNuevaPartida.setText("EMPEZAR NUEVA PARTIDA");
-        empezarNuevaPartida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                empezarNuevaPartidaActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("LISTA DE CONECTADOS");
-
-        jLabel2.setText("LISTA DE JUGADORES");
-
-        jScrollPane2.setViewportView(listaJugadores);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -75,17 +60,10 @@ public class FormServidorJuego extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(IniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(DetenerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(empezarNuevaPartida))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(DetenerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,16 +71,11 @@ public class FormServidorJuego extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(IniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DetenerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(empezarNuevaPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DetenerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -121,7 +94,6 @@ public class FormServidorJuego extends javax.swing.JFrame {
            @Override
            public void onDisconnect(TSocketInfo socketInfo){
                 listaMisConectados.remove(socketInfo);
-                partida.deshabilitarJugador(socketInfo);
                 modificarListaConectados();
                 System.out.println("Se Desconectó: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
            }
@@ -135,9 +107,8 @@ public class FormServidorJuego extends javax.swing.JFrame {
            @Override
             public void onRead(TSocketInfo socketInfo, String mensaje){
                 System.out.println("Desde: "+socketInfo.getHostName() +" ID: " +socketInfo.getIDSession()+" Mensaje: "+mensaje);
-                if(mensaje.contains(Constantes.JUEGO)){
-                    partida.administrarJuego(socketInfo, mensaje);
-                }
+                if(mensaje.contains(Constantes.SALA))
+                    sala.administrarSala(socketInfo, mensaje);
             }
            @Override
             public void onError(int code){
@@ -155,24 +126,10 @@ public class FormServidorJuego extends javax.swing.JFrame {
         servidor.stopServer();
         modificarEstadosBotones();
     }//GEN-LAST:event_DetenerBtnActionPerformed
-
-    private void empezarNuevaPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empezarNuevaPartidaActionPerformed
-        partida = new Partida(this.servidor);
-        if(!listaMisConectados.isEmpty()){
-            listaMisConectados.forEach((socket)->{
-                partida.addNuevoJugador(socket);});
-            if(partida.listaJugadores.size()>1&&partida.listaJugadores.size()<=5)
-                partida.administrarJuego(null,Constantes.JUEGO+Constantes.INICAR_PARTIDA);
-            else
-                System.out.println("NO HAY JUGADORES");
-            modificarListaJugadores();
-        }
-    }//GEN-LAST:event_empezarNuevaPartidaActionPerformed
     
     private void modificarEstadosBotones(){
         IniciarBtn.setEnabled(b);
         DetenerBtn.setEnabled(!b);
-        empezarNuevaPartida.setEnabled(!b);
         b=!b;
     }
     public void modificarListaConectados(){
@@ -183,9 +140,6 @@ public class FormServidorJuego extends javax.swing.JFrame {
     }
     public void modificarListaJugadores(){
         DefaultListModel listModelJugadores = new DefaultListModel();
-        partida.listaJugadores.forEach((jugador)->{
-            listModelJugadores.addElement(jugador.getId());});
-        listaJugadores.setModel(listModelJugadores);
     }
     
     public static void main(String args[]) {
@@ -207,12 +161,8 @@ public class FormServidorJuego extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DetenerBtn;
     private javax.swing.JButton IniciarBtn;
-    private javax.swing.JButton empezarNuevaPartida;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> listaConectados;
-    private javax.swing.JList<String> listaJugadores;
     // End of variables declaration//GEN-END:variables
 }
