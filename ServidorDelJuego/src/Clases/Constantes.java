@@ -22,6 +22,13 @@ public class Constantes {
     public static final String NOMBRE_JUGADORES = "NOMBREJUGADORES";
     public static final String CAMBIAR_DADO = "CAMBIARDADO";
     public static final String TERMINAR_PARTIDA = "TERMINARPARTIDA";
+    public static final String FIN_DE_TURNO = "FINDETURNO";
+    public static final String EMPATE = "EMPATE";
+    public static final String UN_GANADOR = "UNGANADOR";
+    public static final String NUEVA_PARTIDA = "NUEVAPARTIDA";
+    public static final String PARTIDA_TRES_TIROS = "PARTIDATRESTIROS";
+    public static final String PARTIDA_DOS_TIROS = "PARTIDADOSTIROS";
 
     public static final String JUEGO = "S_JUEGO_";
+    public static final String SALA = "S_SALA_";
 }

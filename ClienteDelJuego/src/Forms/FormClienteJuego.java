@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public final class FormClienteJuego extends javax.swing.JFrame{
@@ -44,7 +45,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
                     case Constantes.NUEVO_ID:setMiNuevoId(accion[3]);break;
                     case Constantes.NOMBRE_JUGADORES:mostrarNombreDeJugadores(accion[3]);break;
                     case Constantes.ES_TU_TURNO:iniciarTurno();break;
-                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:jugadorEnTurno.setText(accion[3]);break;
+                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:cambiarJugadorEnTurno(accion[3]);break;
                     case Constantes.MOSTRAR_DADOS:mostrarDados(accion[3]);break;
                     case Constantes.CAMBIAR_DADO:cambiarDado(accion[3]);break;
                     case Constantes.LISTA_DE_JUGADAS:mostrarListaDeJugadas(accion[3]);break;
@@ -500,9 +501,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         }else{
             cliente.sendMensaje(Constantes.JUEGO+
                     Constantes.JUGADA_ESCOGIDA+"_"+jugada);
-            jugada="";
-            mostrarDadosIniciales();
-            enTurno=false;
         }
         botonLanzar.setEnabled(false);
     }//GEN-LAST:event_botonLanzarActionPerformed
@@ -575,6 +573,11 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         cubilete=json.fromJson(cubileteJSON, Cubilete.class);
         actualizarDados();
     }
+    private void cambiarJugadorEnTurno(String nombre){
+        jugada = "";
+        actualizarListaJugadas("");
+        jugadorEnTurno.setText(nombre);
+    }
     private void mostrarListaDeJugadas(String listaDeJugadas){
         actualizarListaJugadas(listaDeJugadas);
         if(enTurno&&canTirosRealizados==3){
@@ -629,8 +632,41 @@ public final class FormClienteJuego extends javax.swing.JFrame{
             iniciarTurno();
         }
     }
-    private void mostrarGanadores(String listaDeGanadores,String maximaPuntuacion){
-        
+    private void mostrarGanadores(String listaDeResultados,String maximaPuntuacion){
+        String[]lista=listaDeResultados.split(",");
+        int cantidadDeGanadores=0;
+        String miTotal="";
+        System.out.println(lista.length);
+        for(int i=1;i<=lista.length;i++){
+            String[]elementosA=lista[i-1].split("-");
+            if(elementosA[2].equals(maximaPuntuacion))cantidadDeGanadores++;
+            if(elementosA[0].equals(miId))miTotal=elementosA[2];
+        }
+        for(int i=1;i<lista.length;i++){
+            for(int j=i+1;j<=lista.length;j++){
+                String[] elementosA=lista[i-1].split("-");
+                String[]elementosB=lista[j-1].split("-");
+                if(elementosB[2].compareTo(elementosA[2])>0){
+                    String aux=lista[i-1];
+                    lista[i-1]=lista[j-1];
+                    lista[j-1]=aux;
+                }
+            }
+        }
+        String mensajeGanador="GANASTE !!!\n\n",mensajePerdedor="Perdiste ...\n\n";
+        if(cantidadDeGanadores>1)mensajeGanador="EMPATE\n\n";
+        String resultado="";
+        if(miTotal.equals(maximaPuntuacion))resultado=mensajeGanador;
+        else resultado=mensajePerdedor;
+        for(int i=1;i<=lista.length;i++){
+            String[] elemento=lista[i-1].split("-");
+            if(elemento[0].equals(miId))resultado=resultado+"--TÚ: ";
+            else resultado=resultado+elemento[1]+": ";
+            resultado=resultado+elemento[2];
+            if(elemento[2].equals("260"))resultado=resultado+"(DORMIDA!!!)";
+            resultado=resultado+"\n";
+        }
+        JOptionPane.showMessageDialog(rootPane,resultado);
     }
     
     public void setCubilete(String cubile){
@@ -732,20 +768,25 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     }
     public void actualizarListaJugadas(String list){
         DefaultListModel listModelJugadores = new DefaultListModel();
-        String[] jugadas = list.split(",");
-        for(int i=1;i<=jugadas.length;i++){
-            if(jugadas[i-1].contains(" al ")){
-                listModelJugadores.addElement(jugadas[i-1]);
-            }else{
-                if(jugadas[i-1].equals(Constantes.JUGADA_GRANDE)&&
-                        jugada.equals(Constantes.JUGADA_DE_MANO)){
-                    listModelJugadores.addElement(Constantes.JUGADA_DORMIDA);
-                }else if(jugada.equals(Constantes.JUGADA_DE_MANO)){
-                    listModelJugadores.addElement(jugadas[i-1]+Constantes.JUGADA_DE_MANO);
+        if(!list.equals("")){
+            String[] jugadas=list.split(",");
+            for(int i=1;i<=jugadas.length;i++){
+                if(jugadas[i-1].contains(" al ")) {
+                    listModelJugadores.addElement(jugadas[i - 1]);
                 }else{
-                    listModelJugadores.addElement(jugadas[i-1]);
+                    if(jugadas[i-1].equals(Constantes.JUGADA_GRANDE)
+                            && jugada.equals(Constantes.JUGADA_DE_MANO)) {
+                        listModelJugadores.addElement(Constantes.JUGADA_DORMIDA);
+                    }else if(!jugadas[i-1].contains("Borrar")&&
+                            jugada.equals(Constantes.JUGADA_DE_MANO)){
+                        listModelJugadores.addElement(jugadas[i-1]+Constantes.JUGADA_DE_MANO);
+                    }else{
+                        listModelJugadores.addElement(jugadas[i - 1]);
+                    }
                 }
             }
+        }else{
+            listModelJugadores.addElement(" ");
         }
         listaJugadas.setModel(listModelJugadores);
     }
@@ -816,7 +857,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
                 jugada=Constantes.JUGADA_DE_MANO;
             }
             puedePedirJugadas=true;
-            aux=canTirosRealizados;
             canTirosRealizados=3;
         }else{
             botonLanzar.setText("LANZAR DADOS");
@@ -1017,6 +1057,10 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         String[] num = idJugador.split("R");
         int numero = Integer.parseInt(num[1]);
         setEnJugadores(false, numero,tablero.getUltimaJugada());
+        if(enTurno){
+            cliente.sendMensaje(Constantes.JUEGO+Constantes.FIN_DE_TURNO);
+            enTurno=false;
+        }
     }
     public static void main(String args[]) {
         try {
