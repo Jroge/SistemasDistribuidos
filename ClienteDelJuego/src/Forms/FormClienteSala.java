@@ -5,13 +5,14 @@ import Controladores.ControladorCliente;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
-public class FormClienteSala extends ControladorCliente{
-
-    String nombreDePartidaAUnirse;
+public class FormClienteSala extends javax.swing.JFrame{
     
-    public FormClienteSala(){
+    ControladorCliente cliente;
+    
+    public FormClienteSala(ControladorCliente nuevoCliente){
         initComponents();
-        nombreJugadorLabel.setText(miNombre);
+        cliente=nuevoCliente;
+        nombreJugadorLabel.setText(cliente.getNombre());
         tresTirosCheck.setSelected(true);
         unirseAPartidaAleatoriabtn.requestFocus();
         unirsePartidaSeleccionadaBtn.setEnabled(false);
@@ -35,27 +36,31 @@ public class FormClienteSala extends ControladorCliente{
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         nombreJugadorLabel.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         nombreJugadorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nombreJugadorLabel.setAlignmentX(5.0F);
         nombreJugadorLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(nombreJugadorLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 630, 43));
 
-        unirseAPartidaAleatoriabtn.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        unirseAPartidaAleatoriabtn.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         unirseAPartidaAleatoriabtn.setText("UNIRSE A PARTIDA ALEATORIA");
         unirseAPartidaAleatoriabtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 unirseAPartidaAleatoriabtnActionPerformed(evt);
             }
         });
+        getContentPane().add(unirseAPartidaAleatoriabtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 146, 270, 56));
 
-        unirsePartidaSeleccionadaBtn.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        unirsePartidaSeleccionadaBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         unirsePartidaSeleccionadaBtn.setText("UNIRSE A PARTIDA SELECCIONADA");
         unirsePartidaSeleccionadaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 unirsePartidaSeleccionadaBtnActionPerformed(evt);
             }
         });
+        getContentPane().add(unirsePartidaSeleccionadaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 78, 269, 56));
 
         crearPartidaBtn.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         crearPartidaBtn.setText("CREAR PARTIDA");
@@ -64,6 +69,8 @@ public class FormClienteSala extends ControladorCliente{
                 crearPartidaBtnActionPerformed(evt);
             }
         });
+        getContentPane().add(crearPartidaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 269, 63));
+        getContentPane().add(buscarPartidaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(362, 80, 280, -1));
 
         tresTirosCheck.setText("TRES TIROS");
         tresTirosCheck.addActionListener(new java.awt.event.ActionListener() {
@@ -71,6 +78,7 @@ public class FormClienteSala extends ControladorCliente{
                 tresTirosCheckActionPerformed(evt);
             }
         });
+        getContentPane().add(tresTirosCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 228, -1, -1));
 
         dosTirosCheck.setText("DOS TIROS-UN VOLTEO");
         dosTirosCheck.addActionListener(new java.awt.event.ActionListener() {
@@ -78,10 +86,13 @@ public class FormClienteSala extends ControladorCliente{
                 dosTirosCheckActionPerformed(evt);
             }
         });
+        getContentPane().add(dosTirosCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 253, -1, -1));
 
         cantidadDeJugadoresCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
+        getContentPane().add(cantidadDeJugadoresCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(492, 256, 115, -1));
 
         jLabel1.setText("CANTIDAD JUGADORES");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(492, 232, -1, -1));
 
         listaDePartidasList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -90,77 +101,15 @@ public class FormClienteSala extends ControladorCliente{
         });
         jScrollPane1.setViewportView(listaDePartidasList);
 
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 110, 350, 110));
+
         jButton1.setText("BUSCAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(nombreJugadorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(unirsePartidaSeleccionadaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unirseAPartidaAleatoriabtn))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buscarPartidaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(crearPartidaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tresTirosCheck)
-                    .addComponent(dosTirosCheck))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(cantidadDeJugadoresCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(nombreJugadorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(unirsePartidaSeleccionadaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(unirseAPartidaAleatoriabtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(buscarPartidaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
-                        .addGap(2, 2, 2)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(crearPartidaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(tresTirosCheck)
-                        .addGap(1, 1, 1)
-                        .addComponent(dosTirosCheck))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel1)
-                        .addGap(7, 7, 7)
-                        .addComponent(cantidadDeJugadoresCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-        );
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(289, 79, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -176,8 +125,14 @@ public class FormClienteSala extends ControladorCliente{
     }//GEN-LAST:event_dosTirosCheckActionPerformed
 
     private void unirsePartidaSeleccionadaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unirsePartidaSeleccionadaBtnActionPerformed
-        String partidaSeleccionada=listaDePartidasList.getSelectedValue().toString();
-        //controladorUnirseAPartidaSeleccionada(partidaSeleccionada);
+        String partidaSeleccionada=listaDePartidasList.getSelectedValue();
+        if(Integer.parseInt(partidaSeleccionada.substring(
+                partidaSeleccionada.length()-1,partidaSeleccionada.length()))>0){
+            String[]elementos=partidaSeleccionada.split(" - ");
+            cliente.controladorUnirseAPartidaSeleccionada(elementos[0]);
+        }else{
+            JOptionPane.showMessageDialog(rootPane,"NO HAY ESPACIO !!!");
+        }
     }//GEN-LAST:event_unirsePartidaSeleccionadaBtnActionPerformed
 
     private void crearPartidaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearPartidaBtnActionPerformed
@@ -187,7 +142,7 @@ public class FormClienteSala extends ControladorCliente{
             String cantidadMaximaJugadores = cantidadDeJugadoresCombo.getSelectedItem().toString();
             String tipoDeJuego = tresTirosCheck.isSelected()?
                     Constantes.PARTIDA_TRES_TIROS:Constantes.PARTIDA_DOS_TIROS;
-            controladorUnirseAPartida(
+            cliente.controladorCrearPartida(
                     Integer.parseInt(cantidadMaximaJugadores),
                     tipoDeJuego
             );
@@ -195,13 +150,13 @@ public class FormClienteSala extends ControladorCliente{
     }//GEN-LAST:event_crearPartidaBtnActionPerformed
 
     private void unirseAPartidaAleatoriabtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unirseAPartidaAleatoriabtnActionPerformed
-        
+        cliente.controladorUnirseAPartidaAleatoria();
     }//GEN-LAST:event_unirseAPartidaAleatoriabtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(!buscarPartidaTxt.getText().equals("")){
-            cliente.sendMensaje(Constantes.SALA+Constantes.BUSCAR_PARTIDA+
-                    "_"+buscarPartidaTxt.getText());
+            String nombreDePartidABuscar=buscarPartidaTxt.getText();
+            cliente.controladorBuscarPartida(nombreDePartidABuscar);
         }else{
             JOptionPane.showMessageDialog(rootPane,"DEBE INTRODUCIR UN NOMBRE DE PARTIDA PARA BUSCAR");
         }
@@ -210,13 +165,11 @@ public class FormClienteSala extends ControladorCliente{
     private void listaDePartidasListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaDePartidasListMouseClicked
         if(!listaDePartidasList.getSelectedValue().equals(" ")){
             unirsePartidaSeleccionadaBtn.setEnabled(true);
-            nombreDePartidaAUnirse=listaDePartidasList.getSelectedValue();
         }
     }//GEN-LAST:event_listaDePartidasListMouseClicked
-
     public void mostrarListaDePartidas(String listaDePartidas) {
          DefaultListModel modelo=new DefaultListModel();
-         if(listaDePartidas.equals("")){
+         if(listaDePartidas.equals(" ")){
             JOptionPane.showMessageDialog(rootPane, "SIN RESULTADOS");
          }else{
             String[]partidas=listaDePartidas.split(",");
@@ -226,6 +179,7 @@ public class FormClienteSala extends ControladorCliente{
          }
          listaDePartidasList.setModel(modelo);
     }
+    
     
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -250,11 +204,11 @@ public class FormClienteSala extends ControladorCliente{
         }
         //</editor-fold>
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FormClienteSala().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -271,4 +225,8 @@ public class FormClienteSala extends ControladorCliente{
     private javax.swing.JButton unirseAPartidaAleatoriabtn;
     private javax.swing.JButton unirsePartidaSeleccionadaBtn;
     // End of variables declaration//GEN-END:variables
+
+    public void setVisibleC(boolean b) {
+        setVisible(b);
+    }
 }

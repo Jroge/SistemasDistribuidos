@@ -107,7 +107,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
            @Override
             public void onRead(TSocketInfo socketInfo, String mensaje){
                 System.out.println("Desde: "+socketInfo.getHostName() +" ID: " +socketInfo.getIDSession()+" Mensaje: "+mensaje);
-                if(mensaje.contains(Constantes.SALA))
+                if(mensaje.contains("S_"))
                     sala.administrarSala(socketInfo,mensaje);
             }
            @Override

@@ -14,8 +14,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public final class FormClienteJuego extends ControladorCliente{
+public final class FormClienteJuego extends javax.swing.JFrame {
     
+    ControladorCliente cliente;
     public Tablero tablero;
     public Cubilete cubilete;
     public int canTirosRealizados,tamGrande,tamPeque,aux;
@@ -24,19 +25,22 @@ public final class FormClienteJuego extends ControladorCliente{
     public boolean[] modificable;
     public String[] listaJugadores;
     public Gson json;
-    public JButton botonLanzarD;
     
-    public FormClienteJuego(){
+    public FormClienteJuego(ControladorCliente nuevoCliente,
+            String nombrePartida,String tipoDeJuego,int cantidadJugadores){
         initComponents();
-        botonLanzarD=botonLanzar;
+        cliente=nuevoCliente;
         json=new Gson();
         tablero=new Tablero();
-        miId="null";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
+        canTirosRealizados=aux=0;
+        jugador1.setText(cliente.getNombre());
+        nombreDePartidaTxt.setText(nombreDePartidaTxt.getText()+nombrePartida);
+        tipoJuegoTxt.setText(tipoJuegoTxt.getText()+tipoDeJuego);
+        maximoJugadoresTxt.setText(maximoJugadoresTxt.getText()+
+                cantidadJugadores+" Jugadores");
         mostrarDadosIniciales();
-        canTirosRealizados=0;
-        jugador1.setText(miNombre);
     }
     
     @SuppressWarnings("unchecked")
@@ -72,12 +76,16 @@ public final class FormClienteJuego extends ControladorCliente{
         ultimaJugadaJugador4 = new javax.swing.JLabel();
         ultimaJugadaJugador5 = new javax.swing.JLabel();
         ultimaJugadaJugador1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        listoParjugarBtn = new javax.swing.JButton();
+        nombreDePartidaTxt = new javax.swing.JLabel();
+        tipoJuegoTxt = new javax.swing.JLabel();
+        maximoJugadoresTxt = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        botonLanzar.setBackground(new java.awt.Color(0, 153, 153));
+        botonLanzar.setBackground(java.awt.Color.cyan);
         botonLanzar.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         botonLanzar.setText("LANZAR DADOS");
         botonLanzar.setEnabled(false);
@@ -138,7 +146,7 @@ public final class FormClienteJuego extends ControladorCliente{
         jugador5.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
         jugador5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jugador5.setText("jugador5");
-        getContentPane().add(jugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 210, 160, 30));
+        getContentPane().add(jugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(564, 210, 160, 30));
 
         tableroJugador1.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
@@ -190,7 +198,7 @@ public final class FormClienteJuego extends ControladorCliente{
             tableroJugador1.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 310, 110, 140));
+        getContentPane().add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(302, 342, 110, 140));
 
         tableroJugador3.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
@@ -345,7 +353,7 @@ public final class FormClienteJuego extends ControladorCliente{
             tableroJugador4.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 50, 110, 140));
+        getContentPane().add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 50, 110, 140));
 
         tableroJugador5.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
@@ -397,7 +405,7 @@ public final class FormClienteJuego extends ControladorCliente{
             tableroJugador5.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane12, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 260, 110, 140));
+        getContentPane().add(jScrollPane12, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 260, 110, 140));
 
         listaJugadas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -406,7 +414,7 @@ public final class FormClienteJuego extends ControladorCliente{
         });
         jScrollPane1.setViewportView(listaJugadas);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, 130, 140));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 342, 130, 140));
 
         jugador2.setBackground(new java.awt.Color(153, 153, 0));
         jugador2.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
@@ -443,18 +451,41 @@ public final class FormClienteJuego extends ControladorCliente{
         getContentPane().add(ultimaJugadaJugador4, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 30, -1, -1));
 
         ultimaJugadaJugador5.setText("ultimaJugadaJugador5");
-        getContentPane().add(ultimaJugadaJugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 240, -1, -1));
+        getContentPane().add(ultimaJugadaJugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 240, -1, -1));
 
         ultimaJugadaJugador1.setText("ultimaJugadaJugador1");
         getContentPane().add(ultimaJugadaJugador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, -1, -1));
 
-        jButton1.setText("ABANDONAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        listoParjugarBtn.setBackground(java.awt.Color.green);
+        listoParjugarBtn.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
+        listoParjugarBtn.setText("LISTO");
+        listoParjugarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                listoParjugarBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(572, 409, 120, 40));
+        getContentPane().add(listoParjugarBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 400, 110, 70));
+
+        nombreDePartidaTxt.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        nombreDePartidaTxt.setText("Nombre de la Partida: ");
+        getContentPane().add(nombreDePartidaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 422, -1, -1));
+
+        tipoJuegoTxt.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        tipoJuegoTxt.setText("Tipo de Juego: ");
+        getContentPane().add(tipoJuegoTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 440, -1, -1));
+
+        maximoJugadoresTxt.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        maximoJugadoresTxt.setText("Maximo de Jugadores: ");
+        getContentPane().add(maximoJugadoresTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 458, -1, -1));
+
+        jButton2.setBackground(java.awt.Color.red);
+        jButton2.setText("ABANDONAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 410, 150, 70));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -467,14 +498,11 @@ public final class FormClienteJuego extends ControladorCliente{
         setTableroDeJugador1();
             String tableroJSON=json.toJson(tablero);
         if(puedePedirJugadas){
-            cliente.sendMensaje(Constantes.JUEGO+
-                    Constantes.LISTA_DE_JUGADAS+"_"+cubileteJSON);
+            cliente.controladorSolicitarListaDeJugadas(cubileteJSON);
         }else if (canTirosRealizados <= 2) {
-            cliente.sendMensaje(Constantes.JUEGO+
-                    Constantes.GENERAR_DADOS+"_"+cubileteJSON);
+            cliente.controladorGenerarDados(cubileteJSON);
         }else{
-            cliente.sendMensaje(Constantes.JUEGO+
-                    Constantes.JUGADA_ESCOGIDA+"_"+jugada);
+            cliente.controladorEnviarJugadaEscogida(jugada);
         }
         botonLanzar.setEnabled(false);
     }//GEN-LAST:event_botonLanzarActionPerformed
@@ -507,14 +535,25 @@ public final class FormClienteJuego extends ControladorCliente{
         }
     }//GEN-LAST:event_listaJugadasMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        cliente.sendMensaje(Constantes.JUEGO+Constantes.ABANDONAR_PARTIDA);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void listoParjugarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listoParjugarBtnActionPerformed
+        if (aux == 0) {
+            cliente.controladorListoParaJugar();
+            jugadorEnTurno.setText("Esperando ...");
+            aux=1;
+        }else{
+            cliente.controladorNoListoParaJugar();
+            jugadorEnTurno.setText("jugadorEnTurno");
+            aux=0;
+        }
+    }//GEN-LAST:event_listoParjugarBtnActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        cliente.controladorAbandonarPartida();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void iniciarTurno(){
         mostrarDadosIniciales();
-        cliente.sendMensaje(Constantes.JUEGO+
-                Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
+        cliente.controladorEnviarNombreJugadorEnTurno();
         enTurno = true;
         botonLanzar.setEnabled(true);
         canTirosRealizados = 0;
@@ -597,20 +636,17 @@ public final class FormClienteJuego extends ControladorCliente{
         else tablero.setGrande(Integer.parseInt((String) modelo.getValueAt(3,1)));
         tableroJugador1.setModel(modelo);
     }
-    public void setMiNuevoId(String nuevoId){
-        miId = nuevoId;
-        System.out.println("Mi nuevo Id es: "+miId);
-        cliente.sendMensaje(Constantes.JUEGO+Constantes.NUEVO_NOMBRE+"_"+miNombre);
-    }
     public void mostrarNombreDeJugadores(String listaNombres){
+        listoParjugarBtn.setEnabled(false);
         actualizarNombresJugadores(listaNombres);
-        String[] nums = miId.split("R");
+        String[] nums = cliente.getId().split("R");
         setEnJugadores(false, Integer.parseInt(nums[1]),"");
-        if(listaJugadores[0].contains(miId)){
+        if(listaJugadores[0].contains(cliente.getId())){
             iniciarTurno();
         }
     }
     public void mostrarGanadores(String listaDeResultados,String maximaPuntuacion){
+        listoParjugarBtn.setEnabled(true);
         String[]lista=listaDeResultados.split(",");
         int cantidadDeGanadores=0;
         String miTotal="";
@@ -618,7 +654,7 @@ public final class FormClienteJuego extends ControladorCliente{
         for(int i=1;i<=lista.length;i++){
             String[]elementosA=lista[i-1].split("-");
             if(elementosA[2].equals(maximaPuntuacion))cantidadDeGanadores++;
-            if(elementosA[0].equals(miId))miTotal=elementosA[2];
+            if(elementosA[0].equals(cliente.getId()))miTotal=elementosA[2];
         }
         for(int i=1;i<lista.length;i++){
             for(int j=i+1;j<=lista.length;j++){
@@ -638,7 +674,7 @@ public final class FormClienteJuego extends ControladorCliente{
         else resultado=mensajePerdedor;
         for(int i=1;i<=lista.length;i++){
             String[] elemento=lista[i-1].split("-");
-            if(elemento[0].equals(miId))resultado=resultado+"--TÚ: ";
+            if(elemento[0].equals(cliente.getId()))resultado=resultado+"--TÚ: ";
             else resultado=resultado+elemento[1]+": ";
             resultado=resultado+elemento[2];
             if(elemento[2].equals("260"))resultado=resultado+"(DORMIDA!!!)";
@@ -669,7 +705,7 @@ public final class FormClienteJuego extends ControladorCliente{
         boolean b=cubilete.getDado(i-1).fueElegido();
         cubilete.getDado(i-1).setFueElegido(!b);
         String cubileteJSON=json.toJson(cubilete);
-        cliente.sendMensaje(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJSON);
+        cliente.controladorEnviarCambioDeDado(cubileteJSON);
         actualizarDados();
     }
     public void mostrarDadosIniciales(){
@@ -866,7 +902,7 @@ public final class FormClienteJuego extends ControladorCliente{
             String nu=el.substring(7,8);
             String nom=el.substring(9,el.length());
             int numero = Integer.parseInt(nu);
-            String[] miNum = miId.split("R");
+            String[] miNum = cliente.getId().split("R");
             int miNumero = Integer.parseInt(miNum[1]);
             int dif=miNumero-numero;
             if(ponerNombres){
@@ -1036,7 +1072,7 @@ public final class FormClienteJuego extends ControladorCliente{
         int numero = Integer.parseInt(num[1]);
         setEnJugadores(false, numero,tablero.getUltimaJugada());
         if(enTurno){
-            cliente.sendMensaje(Constantes.JUEGO+Constantes.FIN_DE_TURNO);
+            cliente.controladorFinalizarTurno();
             enTurno=false;
         }
     }
@@ -1058,11 +1094,11 @@ public final class FormClienteJuego extends ControladorCliente{
             java.util.logging.Logger.getLogger(FormClienteJuego.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormClienteJuego().setVisible(true);
+                new FormClienteJuego(null).setVisible(true);
             }
-        });
+        });*/
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1072,7 +1108,7 @@ public final class FormClienteJuego extends ControladorCliente{
     private javax.swing.JLabel imagenDado3;
     private javax.swing.JLabel imagenDado4;
     private javax.swing.JLabel imagenDado5;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
@@ -1086,15 +1122,23 @@ public final class FormClienteJuego extends ControladorCliente{
     private javax.swing.JLabel jugador5;
     private javax.swing.JLabel jugadorEnTurno;
     private javax.swing.JList<String> listaJugadas;
+    private javax.swing.JButton listoParjugarBtn;
+    private javax.swing.JLabel maximoJugadoresTxt;
+    private javax.swing.JLabel nombreDePartidaTxt;
     private javax.swing.JTable tableroJugador1;
     private javax.swing.JTable tableroJugador2;
     private javax.swing.JTable tableroJugador3;
     private javax.swing.JTable tableroJugador4;
     private javax.swing.JTable tableroJugador5;
+    private javax.swing.JLabel tipoJuegoTxt;
     private javax.swing.JLabel ultimaJugadaJugador1;
     private javax.swing.JLabel ultimaJugadaJugador2;
     private javax.swing.JLabel ultimaJugadaJugador3;
     private javax.swing.JLabel ultimaJugadaJugador4;
     private javax.swing.JLabel ultimaJugadaJugador5;
     // End of variables declaration//GEN-END:variables
+
+    public void setVisibleC(boolean b) {
+        setVisible(b);
+    }
 }

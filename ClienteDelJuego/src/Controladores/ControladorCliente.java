@@ -6,15 +6,19 @@ import Forms.FormClienteSala;
 import TSocket.TClient.Cliente.TSClientClienteSocket;
 import TSocket.TClient.Cliente.TSocketInfo;
 
-public class ControladorCliente extends javax.swing.JFrame {
+public class ControladorCliente{
     
     private TSClientClienteSocket cliente;
     private FormClienteJuego juego;
     private FormClienteSala sala;
-    public static String miNombre,miId;
+    public static String miNombre,miId,miPartida;
     
     public ControladorCliente(){
         
+    }
+    public ControladorCliente(String nuevoNombre){
+        miNombre=nuevoNombre;
+        iniciarFormClienteSala();
         cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
             public void onRead(String mensaje){String[] accion=mensaje.split("_");
@@ -22,7 +26,8 @@ public class ControladorCliente extends javax.swing.JFrame {
                 switch(accion[2]){
                     case Constantes.LISTA_DE_PARTIDAS:sala.mostrarListaDePartidas(accion[3]);break;
                     
-                    case Constantes.NUEVO_ID:juego.setMiNuevoId(accion[3]);break;
+                    case Constantes.PARTIDA_INFO:iniciarFormClienteJuego(accion[3],accion[4],accion[5]);break;
+                    case Constantes.NUEVO_ID:setNuevoId(accion[3]);break;
                     case Constantes.NOMBRE_JUGADORES:juego.mostrarNombreDeJugadores(accion[3]);break;
                     case Constantes.ES_TU_TURNO:juego.iniciarTurno();break;
                     case Constantes.NOMBRE_JUGADOR_EN_TURNO:juego.cambiarJugadorEnTurno(accion[3]);break;
@@ -49,35 +54,89 @@ public class ControladorCliente extends javax.swing.JFrame {
         };cliente.connect();
     }
     
-    public void setNuevoNombre(String nuevoNombre){
-        miNombre=nuevoNombre;
-        iniciarFormClienteSala();
+    public void setNuevoId(String nuevoId){
+        miId = nuevoId;
+        System.out.println("Mi nuevo Id es: "+miId);
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.NUEVO_NOMBRE+"_"+miNombre);
     }
-    public void unirseAPartidaSeleccionada(String nuevaPartida){
-        cliente.sendMensaje(Constantes.SALA+Constantes.UNIRSE_A_PARTIDA+
-                "_"+nuevaPartida);
-    }
-    public void controladorUnirseAPartida(int cantMaxJugadores,String tipo) {
+    public void controladorCrearPartida(int cantMaxJugadores,String tipo) {
         cliente.sendMensaje(Constantes.SALA + Constantes.NUEVA_PARTIDA
                 + "_" + cantMaxJugadores + "_" + tipo);
         terminarFormClienteSala();
     }
+    public void controladorUnirseAPartidaSeleccionada(String nombrePartida){
+        cliente.sendMensaje(Constantes.SALA+Constantes.UNIRSE_A_PARTIDA+
+                "_"+nombrePartida);
+        terminarFormClienteSala();
+    }
+    public void controladorBuscarPartida(String nombreDePartidaABuscar){
+        cliente.sendMensaje(Constantes.SALA+Constantes.BUSCAR_PARTIDA+
+                    "_"+nombreDePartidaABuscar);
+    }
+    public void controladorUnirseAPartidaAleatoria(){
+        cliente.sendMensaje(Constantes.SALA+Constantes.UNIRSE_A_PARTIDA_ALEATORIA);
+        terminarFormClienteSala();
+    }
+    
+    public void controladorSolicitarListaDeJugadas(String cubileteJSON){
+        cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.LISTA_DE_JUGADAS+"_"+cubileteJSON);
+    }
+    public void controladorGenerarDados(String cubileteJSON){
+        cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.GENERAR_DADOS+"_"+cubileteJSON);
+    }
+    public void controladorEnviarJugadaEscogida(String jugada){
+        cliente.sendMensaje(Constantes.JUEGO+
+                    Constantes.JUGADA_ESCOGIDA+"_"+jugada);
+    }
+    public void controladorEnviarNombreJugadorEnTurno(){
+        cliente.sendMensaje(Constantes.JUEGO+
+                Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
+    }
+    public void controladorEnviarCambioDeDado(String cubileteJSON){
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJSON);
+    }
+    public void controladorFinalizarTurno(){
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.FIN_DE_TURNO);
+    }
+    public void controladorAbandonarPartida(){
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.ABANDONAR_PARTIDA);
+    }
+    public void controladorListoParaJugar(){
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTO_PARA_JUGAR);
+    }
+    public void controladorNoListoParaJugar(){
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.NO_LISTO_PARA_JUGAR);
+    }
     
     
     //  METODOS AUXILIARES
-    private void iniciarFormClienteSala(){
-        sala=new FormClienteSala();
-        sala.setVisible(true);
+    public String getNombre(){
+        return miNombre;
     }
-    private void iniciarFormClienteJuego() {
-        juego = new FormClienteJuego();
-        juego.setVisible(true);
+    public String getId(){
+        return miId;
+    }
+    private void iniciarFormClienteSala(){
+        sala=new FormClienteSala(this);
+        sala.setVisibleC(true);
+    }
+    private void iniciarFormClienteJuego(String nombreNuevaPartida,String tipoDeJuego,String cantidadJugadores) {
+        juego = new FormClienteJuego(
+                this,
+                nombreNuevaPartida,
+                tipoDeJuego,
+                Integer.parseInt(cantidadJugadores)
+        );
+        System.out.println("CREADO");
+        juego.setVisibleC(true);
     }
     private void terminarFormClienteSala(){
-        sala.setVisible(false);
+        sala.setVisibleC(false);
     }
     private void terminarFormClienteJuego(){
-        juego.setVisible(false);
+        juego.setVisibleC(false);
     }
     
     

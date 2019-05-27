@@ -76,8 +76,7 @@ public class FormClienteLogIn extends javax.swing.JFrame {
         if(nickTxt.getText().equals("")){
             JOptionPane.showMessageDialog(rootPane,"DEBE INGRESAR UN NICKNAME !!!");
         }else{
-            controlador=new ControladorCliente();
-            controlador.setNuevoNombre(nickTxt.getText());
+            controlador=new ControladorCliente(nickTxt.getText());
             setVisible(false);
         }
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -7,7 +7,7 @@ public class Jugador {
     public TSocketInfo socketJugador;
     public String id;
     public String nombre;
-    public boolean enLinea;
+    public boolean listo;
     
     public Jugador(){
         id="nombre";
@@ -16,17 +16,17 @@ public class Jugador {
         socketJugador=socket;
         id=nuevoId;
         nombre=" ";
-        enLinea=true;
+        listo=true;
     }
 
-    public void setEnLinea(){
-        enLinea=true;
+    public void setListo(){
+        listo=true;
     }
-    public void setNoEnLinea(){
-        enLinea=false;
+    public void setNoListo(){
+        listo=false;
     }
-    public boolean getEnLinea(){
-        return enLinea;
+    public boolean getListo(){
+        return listo;
     }
     public TSocketInfo getSocketJugador() {
         return socketJugador;
