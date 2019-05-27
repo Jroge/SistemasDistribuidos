@@ -45,10 +45,6 @@ public class Cubilete {
     public Dado getDado(int indice){
         return this.dados.get(indice);
     }
-
-    public boolean estaVacio(){
-        return dados.isEmpty();
-    }
     
     public boolean todosSeleccionados(){
         for(int i=1;i<=cantidadDeDados;i++){

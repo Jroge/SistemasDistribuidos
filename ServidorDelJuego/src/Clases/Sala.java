@@ -34,9 +34,9 @@ public class Sala {
     private void salaEnviarListaDePartidas(TSocketInfo socket,String nombreABuscar){
         String lista="";
         for(Partida partida:listaDePartidas){
-            if(partida.getNombre().contains(nombreABuscar))
-                lista=lista+partida.getNombre()+" - "+
-                        partida.getTipo()+" - Espacios: "+
+            if(partida.getNombreDeLaPartida().contains(nombreABuscar))
+                lista=lista+partida.getNombreDeLaPartida()+" - "+
+                        partida.getTipoDeJuego()+" - Espacios: "+
                         Integer.toString(partida.getCupos())+",";
         }
         if(lista.equals(""))lista=" ";
@@ -46,7 +46,7 @@ public class Sala {
     private void salaUnirAPartidaSeleccionada(TSocketInfo socket,String nombrePartida){
         boolean buscar=true;
         for(int i=1;i<=listaDePartidas.size()&&buscar;i++){
-            if(listaDePartidas.get(i-1).getNombre().equals(nombrePartida))
+            if(listaDePartidas.get(i-1).getNombreDeLaPartida().equals(nombrePartida))
                 listaDePartidas.get(i-1).addNuevoJugador(socket);
         }
     }

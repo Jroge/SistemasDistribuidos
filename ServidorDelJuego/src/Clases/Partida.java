@@ -3,18 +3,20 @@ package Clases;
 import TSocket.TServer.Servidor.TSServerServidorSocket;
 import TSocket.TSocketInfo;
 import com.google.gson.Gson;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 
 public class Partida {
     
-    private TSServerServidorSocket server;
+    private final TSServerServidorSocket server;
     public LinkedList<Jugador> listaJugadores;
-    private LinkedList<Tablero> listaDeTableros;
+    private final LinkedList<Tablero> listaDeTableros;
     private Jugador jugadorEnTurno;
-    private Gson json;
-    private String nombre;
-    private int cantidadJugadores;
-    private String tipo;
+    private final Gson json;
+    private final String nombreDeLaPartida;
+    private final int cantidadMaxDeJugadores;
+    private final String tipoDeJuego;
     
     public Partida(TSServerServidorSocket newServer,String nuevoNombre,
             int cantJugadores,String tipoP) {
@@ -22,25 +24,19 @@ public class Partida {
         listaJugadores=new LinkedList<>();
         listaDeTableros=new LinkedList<>();
         json=new Gson();
-        nombre=nuevoNombre;
-        cantidadJugadores=cantJugadores;
-        tipo=tipoP;
+        nombreDeLaPartida=nuevoNombre;
+        cantidadMaxDeJugadores=cantJugadores;
+        tipoDeJuego=tipoP;
     }
-    public String getNombre(){
-        return nombre;
-    }
-    public String getTipo(){
-        return tipo;
-    }
-    public int getCantidadJugadores(){
-        return cantidadJugadores;
-    }
-    public int getCupos(){
-        return cantidadJugadores-listaJugadores.size();
-    }
+    
+    public String getNombreDeLaPartida(){return nombreDeLaPartida;}
+    public String getTipoDeJuego(){return tipoDeJuego;}
+    public int getCantidadMaxDeJugadores(){return cantidadMaxDeJugadores;}
+    public int getCupos(){return cantidadMaxDeJugadores-listaJugadores.size();}
+    
     public void administrarJuego(TSocketInfo socketInfo, String mensaje){
         String[] accion = mensaje.split("_");
-        System.out.println(mensaje);
+        System.out.println("Partida: "+mensaje);
         switch (accion[2]){
             case Constantes.LISTO_PARA_JUGAR: juegoSetListoParaJugar(socketInfo);break;
             case Constantes.NO_LISTO_PARA_JUGAR: juegoSetNoListoParaJugar(socketInfo);break;
@@ -63,12 +59,7 @@ public class Partida {
                 listaJugadores.get(i-1).setListo();
                 buscar=false;
             }
-        }
-        System.out.println("LLEGA");
-        if(todosListos()){
-            System.out.println("LISTOS");
-            juegoIniciarPartida();
-        }
+        }if(todosListos())juegoIniciarPartida();
     }
     private void juegoSetNoListoParaJugar(TSocketInfo socket){
         boolean buscar=true;
@@ -80,28 +71,27 @@ public class Partida {
         }
     }
     private void juegoSacarDeLaPartida(TSocketInfo socket){
-        
+        boolean buscar=true;
+        for(int i=1;i<=listaJugadores.size()&&buscar;i++){
+            if(sonElMismoSocket(listaJugadores.get(i-1).getSocketJugador(),socket)){
+                listaJugadores.get(i-1).setEnNoLinea();
+                buscar=false;
+            }
+        }
     }
     private void juegoIniciarPartida(){
-        boolean buscar=true;int i=1;
-        while(i<=listaJugadores.size()){
+        boolean buscar=true;
+        for(int i=1;i<=listaJugadores.size()&&buscar;i++){
             Jugador jugador=listaJugadores.get(i-1);
-            if(jugador.getListo()){
-                if(buscar){
-                    server.sendMensaje(jugador.getSocketJugador(),Constantes.JUEGO+
-                        Constantes.NUEVO_ID+"_"+jugador.getId());
-                    buscar=false;
-                }
-            }else{
-                listaJugadores.remove(jugador);
-                listaDeTableros.remove(i-1);
-                i--;
+            if(jugador.getEnLinea()){
+                server.sendMensaje(jugador.getSocketJugador(),Constantes.JUEGO+
+                    Constantes.NUEVO_ID+"_"+jugador.getId());
+                buscar=false;
             }
-            i++;
         }
     }
     private void juegoSetNuevoNombre(TSocketInfo socket,String nuevoNombre){
-        boolean buscar=true,todosConNombre=false;
+        boolean buscar=true;
         for(int i=1;i<=listaJugadores.size()&&buscar;i++){
             if(sonElMismoSocket(listaJugadores.get(i-1).getSocketJugador(), socket)){
                 buscar=false;
@@ -110,18 +100,15 @@ public class Partida {
                     server.sendMensaje(listaJugadores.get(i).
                     getSocketJugador(),Constantes.JUEGO+
                     Constantes.NUEVO_ID+"_"+listaJugadores.get(i).getId());
-                else todosConNombre=true;
             }
         }
-        if(todosConNombre){
-            String lista = listaJugadoresSinSocket();
+        if(todosConNombre())
             sendMensajeJugadoresPartida(Constantes.JUEGO+
-                    Constantes.NOMBRE_JUGADORES+"_"+lista);
-        }
+                    Constantes.NOMBRE_JUGADORES+"_"+listaJugadoresSinSocket());
     }
-    private void juegoEnviarNombreJugadorEnTurno(String nombre){
+    private void juegoEnviarNombreJugadorEnTurno(String nombreDeJugadorEnTurno){
         sendMensajeJugadoresPartida(Constantes.JUEGO+
-                Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+nombre);
+                Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+nombreDeJugadorEnTurno);
     }
     private void juegoGenerarDados(String cubile){
         Cubilete cubilete=json.fromJson(cubile,Cubilete.class);
@@ -152,8 +139,8 @@ public class Partida {
                 nuevoSocket,Constantes.JUGADOR+(listaJugadores.size()+1)));
             listaDeTableros.addLast(new Tablero());
             server.sendMensaje(nuevoSocket,Constantes.JUEGO+
-                    Constantes.PARTIDA_INFO+"_"+nombre+"_"+tipo+"_"+
-                    Integer.toString(cantidadJugadores));
+                    Constantes.PARTIDA_INFO+"_"+nombreDeLaPartida+"_"+tipoDeJuego+"_"+
+                    Integer.toString(cantidadMaxDeJugadores));
         }else{
             boolean buscar=true;
             for(int i=1;i<=listaJugadores.size()&&buscar;i++){
@@ -251,16 +238,19 @@ public class Partida {
                 Constantes.ES_TU_TURNO);
         }
     }
+    
+    
+    //OERACIONES AUXILIARES
+    private boolean todosConNombre(){
+        return listaJugadores.stream().noneMatch((Jugador jugador)
+                ->jugador.getNombre().equals(" "));
+    }
     private boolean todosListos(){
-        for(Jugador jugador:listaJugadores){
-            if(!jugador.getListo()){
-                return false;
-            }
-        }return true;
+        return listaJugadores.stream().noneMatch((jugador)
+                ->(!jugador.getListo()));
     }
     private void sendMensajeJugadoresPartida(String mensaje){
-        for(Jugador jugador:listaJugadores){
-            server.sendMensaje(jugador.getSocketJugador(), mensaje);
-        }
+        listaJugadores.forEach((Jugador jugador)->
+        {server.sendMensaje(jugador.getSocketJugador(), mensaje);});
     }
 }
