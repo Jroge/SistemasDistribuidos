@@ -115,28 +115,28 @@ public class Partida {
         }
         if(todosConNombre){
             String lista = listaJugadoresSinSocket();
-            server.sendMensajeTodos(Constantes.JUEGO+
+            sendMensajeJugadoresPartida(Constantes.JUEGO+
                     Constantes.NOMBRE_JUGADORES+"_"+lista);
         }
     }
     private void juegoEnviarNombreJugadorEnTurno(String nombre){
-        server.sendMensajeTodos(Constantes.JUEGO+
+        sendMensajeJugadoresPartida(Constantes.JUEGO+
                 Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+nombre);
     }
     private void juegoGenerarDados(String cubile){
         Cubilete cubilete=json.fromJson(cubile,Cubilete.class);
         cubilete.agitar();
         String cad=json.toJson(cubilete);
-        server.sendMensajeTodos(Constantes.JUEGO+Constantes.MOSTRAR_DADOS+"_"+cad);
+        sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.MOSTRAR_DADOS+"_"+cad);
     }
     private void juegoCambiarDado(String cubileteJson){
-        server.sendMensajeTodos(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJson);
+        sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.CAMBIAR_DADO+"_"+cubileteJson);
     }
     private void juegoEnviarListaJugadas(TSocketInfo socket,String cubile){
         Cubilete cubilete=json.fromJson(cubile,Cubilete.class);
         Tablero tablero=listaDeTableros.get(posicionDelJugador(socket));
         String lista=tablero.listaDeJugadas(cubilete);
-        server.sendMensajeTodos(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
+        sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.LISTA_DE_JUGADAS+"_"+lista);
     }
     private void juegoJugadaEscogida(TSocketInfo socketInfo, String jugada){
         Tablero tablero=listaDeTableros.get(posicionDelJugador(socketInfo));
@@ -193,7 +193,7 @@ public class Partida {
         tablero.setJugada(jugada);
         String tableroJson=json.toJson(tablero);
         Jugador jugador=listaJugadores.get(posicionDelJugador(socket));
-        server.sendMensajeTodos(Constantes.JUEGO+
+        sendMensajeJugadoresPartida(Constantes.JUEGO+
                 Constantes.CAMBIAR_TABLERO+"_"+tableroJson+"_"+jugador.getId());
     }
     private String listaJugadoresSinSocket(){
@@ -239,7 +239,7 @@ public class Partida {
                 maximaPuntuacion=tablero.getTotal();
             }
         }
-        server.sendMensajeTodos(Constantes.JUEGO+Constantes.TERMINAR_PARTIDA+
+        sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.TERMINAR_PARTIDA+
                 "_"+listaDeResultado+"_"+Integer.toString(maximaPuntuacion));
     }
     public void juegoPasarAlSiguienteTurno(TSocketInfo socket){
@@ -257,5 +257,10 @@ public class Partida {
                 return false;
             }
         }return true;
+    }
+    private void sendMensajeJugadoresPartida(String mensaje){
+        for(Jugador jugador:listaJugadores){
+            server.sendMensaje(jugador.getSocketJugador(), mensaje);
+        }
     }
 }
