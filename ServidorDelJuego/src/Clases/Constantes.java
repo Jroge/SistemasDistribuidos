@@ -28,6 +28,10 @@ public class Constantes {
     public static final String NUEVA_PARTIDA = "NUEVAPARTIDA";
     public static final String PARTIDA_TRES_TIROS = "PARTIDATRESTIROS";
     public static final String PARTIDA_DOS_TIROS = "PARTIDADOSTIROS";
+    public static final String ABANDONAR_PARTIDA = "ABADONARPARTIDA";
+    public static final String BUSCAR_PARTIDA = "BUSCARPARTIDA";
+    public static final String LISTA_DE_PARTIDAS = "LISTADEPARTIDAS";
+    public static final String UNIRSE_A_PARTIDA = "UNIRSEAPARTIDA";
 
     public static final String JUEGO = "S_JUEGO_";
     public static final String SALA = "S_SALA_";

@@ -1,10 +1,11 @@
 package Forms;
 
+import Controladores.ControladorCliente;
 import javax.swing.JOptionPane;
 
 public class FormClienteLogIn extends javax.swing.JFrame {
     
-    FormClienteSala juego;
+    ControladorCliente controlador;
     
     public FormClienteLogIn() {
         initComponents();
@@ -75,8 +76,8 @@ public class FormClienteLogIn extends javax.swing.JFrame {
         if(nickTxt.getText().equals("")){
             JOptionPane.showMessageDialog(rootPane,"DEBE INGRESAR UN NICKNAME !!!");
         }else{
-            juego=new FormClienteSala(nickTxt.getText());
-            juego.setVisible(true);
+            controlador=new ControladorCliente();
+            controlador.setNuevoNombre(nickTxt.getText());
             setVisible(false);
         }
     }//GEN-LAST:event_jButton1ActionPerformed

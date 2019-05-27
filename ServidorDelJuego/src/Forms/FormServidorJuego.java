@@ -108,7 +108,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
             public void onRead(TSocketInfo socketInfo, String mensaje){
                 System.out.println("Desde: "+socketInfo.getHostName() +" ID: " +socketInfo.getIDSession()+" Mensaje: "+mensaje);
                 if(mensaje.contains(Constantes.SALA))
-                    sala.administrarSala(socketInfo, mensaje);
+                    sala.administrarSala(socketInfo,mensaje);
             }
            @Override
             public void onError(int code){
@@ -120,6 +120,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
             }
        };
        servidor.startServer();
+       sala=new Sala(servidor);
     }//GEN-LAST:event_IniciarBtnActionPerformed
 
     private void DetenerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DetenerBtnActionPerformed

@@ -17,12 +17,16 @@ public class Sala {
         String[]accion=mensaje.split("_");
         switch(accion[2]){
             case Constantes.NUEVA_PARTIDA:
-                crearNuevaPartida(accion[3],accion[4],accion[5]);break;
+                salaCrearNuevaPartida(socket,accion[3],accion[4]);break;
+            case Constantes.BUSCAR_PARTIDA:salaEnviarListaDePartidas(socket,accion[3]);break;
         }
     }
-    public void crearNuevaPartida(String nombre,String cantidadJugadores,String tipo){
+    public void salaCrearNuevaPartida(TSocketInfo socket,String cantidadJugadores,String tipo){
         listaDePartidas.addLast(new Partida(
-                server,nombre,Integer.parseInt(cantidadJugadores),tipo));
+                server,"Partida"+Integer.toString(listaDePartidas.size()+1),
+                Integer.parseInt(cantidadJugadores),tipo));
+        Partida partida=listaDePartidas.getLast();
+        partida.addNuevoJugador(socket);
         /*if(!listaMisConectados.isEmpty()){
             listaMisConectados.forEach((socket)->{
                 partida.addNuevoJugador(socket);});
@@ -32,5 +36,18 @@ public class Sala {
                 System.out.println("NO HAY JUGADORES");
             modificarListaJugadores();
         }*/
+    }
+    private void salaEnviarListaDePartidas(TSocketInfo socket,String nombreABuscar){
+        String lista="";
+        for(int i=1;i<=listaDePartidas.size();i++){
+            if(listaDePartidas.get(i-1).getNombre().contains(nombreABuscar)){
+                lista=lista+listaDePartidas.get(i-1).getNombre()+",";
+            }
+        }
+        if(lista.equals("")){
+            lista=" ";
+        }
+        server.sendMensaje(socket,Constantes.SALA+
+                Constantes.LISTA_DE_PARTIDAS+"_"+lista);
     }
 }

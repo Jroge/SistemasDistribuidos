@@ -1,72 +1,42 @@
 package Forms;
 
 import Clases.Constantes;
+import Controladores.ControladorCliente;
 import Clases.Cubilete;
 import Clases.Tablero;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import TSocket.TClient.Cliente.TSClientClienteSocket;
-import TSocket.TClient.Cliente.TSocketInfo;
 import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public final class FormClienteJuego extends javax.swing.JFrame{
+public final class FormClienteJuego extends ControladorCliente{
     
-    TSClientClienteSocket cliente;
-    Tablero tablero;
-    Cubilete cubilete;
-    int canTirosRealizados,tamGrande,tamPeque,aux;
-    String jugada,miNombre,miId;
-    boolean enTurno,puedePedirJugadas;
-    boolean[] modificable;
-    String[] listaJugadores;
-    Gson json;
+    public Tablero tablero;
+    public Cubilete cubilete;
+    public int canTirosRealizados,tamGrande,tamPeque,aux;
+    public String jugada;
+    public boolean enTurno,puedePedirJugadas;
+    public boolean[] modificable;
+    public String[] listaJugadores;
+    public Gson json;
+    public JButton botonLanzarD;
     
     public FormClienteJuego(){
         initComponents();
+        botonLanzarD=botonLanzar;
         json=new Gson();
         tablero=new Tablero();
-        miNombre="Jroge";
         miId="null";
         tamGrande=imagenDado1.getWidth();
         tamPeque=tamGrande-20;
         mostrarDadosIniciales();
         canTirosRealizados=0;
         jugador1.setText(miNombre);
-        cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
-            @Override
-            public void onRead(String mensaje){String[] accion=mensaje.split("_");
-                System.out.println(mensaje);
-                switch(accion[2]){
-                    case Constantes.NUEVO_ID:setMiNuevoId(accion[3]);break;
-                    case Constantes.NOMBRE_JUGADORES:mostrarNombreDeJugadores(accion[3]);break;
-                    case Constantes.ES_TU_TURNO:iniciarTurno();break;
-                    case Constantes.NOMBRE_JUGADOR_EN_TURNO:cambiarJugadorEnTurno(accion[3]);break;
-                    case Constantes.MOSTRAR_DADOS:mostrarDados(accion[3]);break;
-                    case Constantes.CAMBIAR_DADO:cambiarDado(accion[3]);break;
-                    case Constantes.LISTA_DE_JUGADAS:mostrarListaDeJugadas(accion[3]);break;
-                    case Constantes.CAMBIAR_TABLERO:setTablero(accion[3],accion[4]);break;
-                    case Constantes.TERMINAR_PARTIDA:mostrarGanadores(accion[3],accion[4]);break;
-                }
-            }
-            @Override
-            public void onWrite(String mensaje){}
-            @Override
-            public void onConnected(TSocketInfo socketInfo){
-                    System.out.println("CONECTADO");}
-            @Override
-            public void onDisconnect(TSocketInfo socketInfo){
-                    System.out.println("DESCONECTADO");}
-            @Override
-            public void onReconnect(TSocketInfo socketInfo){
-                    System.out.println("RECONECTADO");}
-            @Override
-            public void onError(int errorCode){}
-        };cliente.connect();
     }
     
     @SuppressWarnings("unchecked")
@@ -102,6 +72,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         ultimaJugadaJugador4 = new javax.swing.JLabel();
         ultimaJugadaJugador5 = new javax.swing.JLabel();
         ultimaJugadaJugador1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -210,7 +181,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         tableroJugador1.setRequestFocusEnabled(false);
         tableroJugador1.setRowHeight(25);
         tableroJugador1.setRowSelectionAllowed(false);
-        tableroJugador1.setShowGrid(true);
         tableroJugador1.setUpdateSelectionOnSort(false);
         tableroJugador1.setVerifyInputWhenFocusTarget(false);
         jScrollPane6.setViewportView(tableroJugador1);
@@ -263,7 +233,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         tableroJugador3.setRequestFocusEnabled(false);
         tableroJugador3.setRowHeight(25);
         tableroJugador3.setRowSelectionAllowed(false);
-        tableroJugador3.setShowGrid(true);
         tableroJugador3.setUpdateSelectionOnSort(false);
         tableroJugador3.setVerifyInputWhenFocusTarget(false);
         jScrollPane9.setViewportView(tableroJugador3);
@@ -315,7 +284,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         tableroJugador2.setRequestFocusEnabled(false);
         tableroJugador2.setRowHeight(25);
         tableroJugador2.setRowSelectionAllowed(false);
-        tableroJugador2.setShowGrid(true);
         tableroJugador2.setUpdateSelectionOnSort(false);
         tableroJugador2.setVerifyInputWhenFocusTarget(false);
         jScrollPane10.setViewportView(tableroJugador2);
@@ -368,7 +336,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         tableroJugador4.setRequestFocusEnabled(false);
         tableroJugador4.setRowHeight(25);
         tableroJugador4.setRowSelectionAllowed(false);
-        tableroJugador4.setShowGrid(true);
         tableroJugador4.setUpdateSelectionOnSort(false);
         tableroJugador4.setVerifyInputWhenFocusTarget(false);
         jScrollPane11.setViewportView(tableroJugador4);
@@ -421,7 +388,6 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         tableroJugador5.setRequestFocusEnabled(false);
         tableroJugador5.setRowHeight(25);
         tableroJugador5.setRowSelectionAllowed(false);
-        tableroJugador5.setShowGrid(true);
         tableroJugador5.setUpdateSelectionOnSort(false);
         tableroJugador5.setVerifyInputWhenFocusTarget(false);
         jScrollPane12.setViewportView(tableroJugador5);
@@ -482,6 +448,14 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         ultimaJugadaJugador1.setText("ultimaJugadaJugador1");
         getContentPane().add(ultimaJugadaJugador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, -1, -1));
 
+        jButton1.setText("ABANDONAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(572, 409, 120, 40));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -533,7 +507,11 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         }
     }//GEN-LAST:event_listaJugadasMouseClicked
 
-    private void iniciarTurno(){
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        cliente.sendMensaje(Constantes.JUEGO+Constantes.ABANDONAR_PARTIDA);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void iniciarTurno(){
         mostrarDadosIniciales();
         cliente.sendMensaje(Constantes.JUEGO+
                 Constantes.NOMBRE_JUGADOR_EN_TURNO+"_"+miNombre);
@@ -543,7 +521,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         puedePedirJugadas = false;
         botonLanzar.setText("LANZAR DADOS");
     }
-    private void mostrarDados(String cubileteJSON) {
+    public void mostrarDados(String cubileteJSON) {
         canTirosRealizados++;
         aux = canTirosRealizados;
         setCubilete(cubileteJSON);
@@ -569,23 +547,23 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         };
         timer.schedule(tarea, 1000, 1000);
     }
-    private void cambiarDado(String cubileteJSON) {
+    public void cambiarDado(String cubileteJSON) {
         cubilete=json.fromJson(cubileteJSON, Cubilete.class);
         actualizarDados();
     }
-    private void cambiarJugadorEnTurno(String nombre){
+    public void cambiarJugadorEnTurno(String nombre){
         jugada = "";
         actualizarListaJugadas("");
         jugadorEnTurno.setText(nombre);
     }
-    private void mostrarListaDeJugadas(String listaDeJugadas){
+    public void mostrarListaDeJugadas(String listaDeJugadas){
         actualizarListaJugadas(listaDeJugadas);
         if(enTurno&&canTirosRealizados==3){
             puedePedirJugadas = false;
             botonLanzar.setText("SELECCIONAR JUGADA");
         }
     }
-    private void setTableroDeJugador1(){
+    public void setTableroDeJugador1(){
         DefaultTableModel modelo=(DefaultTableModel) tableroJugador1.getModel();
         if(modelo.getValueAt(0,0).equals(" "))tablero.setAlUno(0);
         else if(modelo.getValueAt(0,0).equals("X"))tablero.setAlUno(-1);
@@ -619,12 +597,12 @@ public final class FormClienteJuego extends javax.swing.JFrame{
         else tablero.setGrande(Integer.parseInt((String) modelo.getValueAt(3,1)));
         tableroJugador1.setModel(modelo);
     }
-    private void setMiNuevoId(String nuevoId){
+    public void setMiNuevoId(String nuevoId){
         miId = nuevoId;
         System.out.println("Mi nuevo Id es: "+miId);
         cliente.sendMensaje(Constantes.JUEGO+Constantes.NUEVO_NOMBRE+"_"+miNombre);
     }
-    private void mostrarNombreDeJugadores(String listaNombres){
+    public void mostrarNombreDeJugadores(String listaNombres){
         actualizarNombresJugadores(listaNombres);
         String[] nums = miId.split("R");
         setEnJugadores(false, Integer.parseInt(nums[1]),"");
@@ -632,7 +610,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
             iniciarTurno();
         }
     }
-    private void mostrarGanadores(String listaDeResultados,String maximaPuntuacion){
+    public void mostrarGanadores(String listaDeResultados,String maximaPuntuacion){
         String[]lista=listaDeResultados.split(",");
         int cantidadDeGanadores=0;
         String miTotal="";
@@ -1094,6 +1072,7 @@ public final class FormClienteJuego extends javax.swing.JFrame{
     private javax.swing.JLabel imagenDado3;
     private javax.swing.JLabel imagenDado4;
     private javax.swing.JLabel imagenDado5;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;

@@ -26,7 +26,9 @@ public class Partida {
         cantidadJugadores=cantJugadores;
         tipo=tipoP;
     }
-    
+    public String getNombre(){
+        return nombre;
+    }
     public void addNuevoJugador(TSocketInfo nuevoSocket){
         if(!existeSocketEnListaJugadores(nuevoSocket)){
             listaJugadores.addLast(new Jugador(
