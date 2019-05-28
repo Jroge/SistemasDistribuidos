@@ -6,13 +6,14 @@ import java.util.LinkedList;
 
 public class Sala {
     
-    private LinkedList<Partida> listaDePartidas;
-    private TSServerServidorSocket server;
+    private final LinkedList<Partida> listaDePartidas;
+    private final TSServerServidorSocket server;
     
     public Sala(TSServerServidorSocket nuevoServer){
         listaDePartidas=new LinkedList<>();
         server=nuevoServer;
     }
+    
     public void administrarSala(TSocketInfo socket,String mensaje){
         String[]accion=mensaje.split("_");
         System.out.println(mensaje);
@@ -21,6 +22,7 @@ public class Sala {
             case Constantes.BUSCAR_PARTIDA:salaEnviarListaDePartidas(socket,accion[3]);break;
             case Constantes.UNIRSE_A_PARTIDA:salaUnirAPartidaSeleccionada(socket,accion[3]);break;
             case Constantes.UNIRSE_A_PARTIDA_ALEATORIA:salaUnirAPartidaAleatoria(socket);break;
+            case Constantes.CERRAR_PARTIDA:salaCerrarPartida(accion[3]);break;
             default:salaMandarAPartida(socket,mensaje);break;
         }
     }
@@ -51,21 +53,31 @@ public class Sala {
         }
     }
     private void salaUnirAPartidaAleatoria(TSocketInfo socket){
-        boolean unido=false;
-        for(int i=1;i<=listaDePartidas.size()&&!unido;i++){
+        boolean jugadorUnidoAPartida=false;
+        for(int i=1;i<=listaDePartidas.size()&&!jugadorUnidoAPartida;i++){
             Partida partida=listaDePartidas.get(i-1);
             if(partida.getCupos()>0){
                 partida.addNuevoJugador(socket);
-                unido=true;
+                jugadorUnidoAPartida=true;
             }
         }
-        if(!unido)salaCrearNuevaPartida(socket,"2",Constantes.PARTIDA_TRES_TIROS);
+        if(!jugadorUnidoAPartida)salaCrearNuevaPartida(socket,"2",Constantes.PARTIDA_TRES_TIROS);
     }
     private void salaMandarAPartida(TSocketInfo socket,String mensaje){
         boolean buscar=true;
         for(int i=1;i<=listaDePartidas.size()&&buscar;i++){
             if(listaDePartidas.get(i-1).contieneAlJugador(socket)){
                 listaDePartidas.get(i-1).administrarJuego(socket, mensaje);
+                buscar=false;
+            }
+        }
+    }
+    private void salaCerrarPartida(String nombreDeLaPartida){
+        boolean buscar=true;
+        for(int i=1;i<=listaDePartidas.size()&&buscar;i++){
+            Partida partida=listaDePartidas.get(i-1);
+            if(partida.getNombreDeLaPartida().equals(nombreDeLaPartida)){
+                listaDePartidas.remove(partida);
                 buscar=false;
             }
         }

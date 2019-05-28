@@ -117,7 +117,7 @@ public class Tablero {
         int total=0;
         for(int i=1;i<=3;i++){
             for(int j=1;j<=3;j++){
-                total+=tablero[i][j]>0?tablero[i][j]:0;
+                total+=tablero[i-1][j-1]>0?tablero[i-1][j-1]:0;
             }
         }return total;
     }

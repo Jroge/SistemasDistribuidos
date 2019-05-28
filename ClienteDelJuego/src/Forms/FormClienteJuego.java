@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -485,7 +484,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 410, 150, 70));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 440, 110, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -644,6 +643,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         if(listaJugadores[0].contains(cliente.getId())){
             iniciarTurno();
         }
+        actualizarTableros();
     }
     public void mostrarGanadores(String listaDeResultados,String maximaPuntuacion){
         listoParjugarBtn.setEnabled(true);
@@ -680,6 +680,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             if(elemento[2].equals("260"))resultado=resultado+"(DORMIDA!!!)";
             resultado=resultado+"\n";
         }
+        aux=0;//Para el boton LISTO
         JOptionPane.showMessageDialog(rootPane,resultado);
     }
     
@@ -1076,7 +1077,19 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             enTurno=false;
         }
     }
-    public static void main(String args[]) {
+    public void setVisibleC(boolean b) {
+        setVisible(b);
+    }
+
+    private void actualizarTableros() {
+        tablero=new Tablero();
+        actualizarTablero(1,"");
+        actualizarTablero(2,"");
+        actualizarTablero(3,"");
+        actualizarTablero(4,"");
+        actualizarTablero(5,"");
+    }
+    /*public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())){
@@ -1098,8 +1111,8 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             public void run() {
                 new FormClienteJuego(null).setVisible(true);
             }
-        });*/
-    }
+        });
+    }*/
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonLanzar;
@@ -1138,7 +1151,4 @@ public final class FormClienteJuego extends javax.swing.JFrame {
     private javax.swing.JLabel ultimaJugadaJugador5;
     // End of variables declaration//GEN-END:variables
 
-    public void setVisibleC(boolean b) {
-        setVisible(b);
-    }
 }

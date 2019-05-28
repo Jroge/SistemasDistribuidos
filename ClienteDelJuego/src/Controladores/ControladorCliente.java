@@ -25,6 +25,7 @@ public class ControladorCliente{
                 System.out.println(mensaje);
                 switch(accion[2]){
                     case Constantes.LISTA_DE_PARTIDAS:sala.mostrarListaDePartidas(accion[3]);break;
+                    case Constantes.CERRAR_PARTIDA:cerrarPartida(accion[3]);break;
                     
                     case Constantes.PARTIDA_INFO:iniciarFormClienteJuego(accion[3],accion[4],accion[5]);break;
                     case Constantes.NUEVO_ID:setNuevoId(accion[3]);break;
@@ -102,12 +103,17 @@ public class ControladorCliente{
     }
     public void controladorAbandonarPartida(){
         cliente.sendMensaje(Constantes.JUEGO+Constantes.ABANDONAR_PARTIDA);
+        terminarFormClienteJuego();
+        iniciarFormClienteSala();
     }
     public void controladorListoParaJugar(){
         cliente.sendMensaje(Constantes.JUEGO+Constantes.LISTO_PARA_JUGAR);
     }
     public void controladorNoListoParaJugar(){
         cliente.sendMensaje(Constantes.JUEGO+Constantes.NO_LISTO_PARA_JUGAR);
+    }
+    public void cerrarPartida(String nombreDeLaPartida){
+        cliente.sendMensaje(Constantes.SALA+Constantes.CERRAR_PARTIDA+"_"+nombreDeLaPartida);
     }
     
     

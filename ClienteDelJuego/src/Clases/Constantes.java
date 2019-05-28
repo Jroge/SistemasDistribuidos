@@ -36,6 +36,10 @@ public class Constantes {
     public static final String PARTIDA_INFO = "PARTIDAINFO";
     public static final String LISTO_PARA_JUGAR = "LISTOPARAJUEGAR";
     public static final String NO_LISTO_PARA_JUGAR = "NOLISTOPARAJUEGAR";
+    public static final String CERRAR_PARTIDA = "CERRARPARTIDA";
+    public static final String JUGADOR_DESCONECTADO = "JUGADORDESCNECTADO";
+    public static final String JUGADOR_RECONECTADO = "JUGADORRECONECTADO";
+    public static final String REANUDAR_TURNO = "REANUDARTURNO";
     
     public static final String JUEGO = "S_JUEGO_";
     public static final String SALA = "S_SALA_";
