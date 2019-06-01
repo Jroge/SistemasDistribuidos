@@ -13,7 +13,6 @@ public class FormClienteSala extends javax.swing.JFrame{
         initComponents();
         cliente=nuevoCliente;
         nombreJugadorLabel.setText(cliente.getNombre());
-        tresTirosCheck.setSelected(true);
         unirseAPartidaAleatoriabtn.requestFocus();
         unirsePartidaSeleccionadaBtn.setEnabled(false);
     }
@@ -27,8 +26,6 @@ public class FormClienteSala extends javax.swing.JFrame{
         unirsePartidaSeleccionadaBtn = new javax.swing.JButton();
         crearPartidaBtn = new javax.swing.JButton();
         buscarPartidaTxt = new javax.swing.JTextField();
-        tresTirosCheck = new javax.swing.JRadioButton();
-        dosTirosCheck = new javax.swing.JRadioButton();
         cantidadDeJugadoresCombo = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -72,27 +69,11 @@ public class FormClienteSala extends javax.swing.JFrame{
         getContentPane().add(crearPartidaBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 269, 63));
         getContentPane().add(buscarPartidaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(362, 80, 280, -1));
 
-        tresTirosCheck.setText("TRES TIROS");
-        tresTirosCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tresTirosCheckActionPerformed(evt);
-            }
-        });
-        getContentPane().add(tresTirosCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 228, -1, -1));
-
-        dosTirosCheck.setText("DOS TIROS-UN VOLTEO");
-        dosTirosCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dosTirosCheckActionPerformed(evt);
-            }
-        });
-        getContentPane().add(dosTirosCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 253, -1, -1));
-
         cantidadDeJugadoresCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
-        getContentPane().add(cantidadDeJugadoresCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(492, 256, 115, -1));
+        getContentPane().add(cantidadDeJugadoresCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 260, 115, -1));
 
         jLabel1.setText("CANTIDAD JUGADORES");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(492, 232, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 230, -1, -1));
 
         listaDePartidasList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -114,16 +95,6 @@ public class FormClienteSala extends javax.swing.JFrame{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tresTirosCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tresTirosCheckActionPerformed
-        tresTirosCheck.setSelected(true);
-        dosTirosCheck.setSelected(false);
-    }//GEN-LAST:event_tresTirosCheckActionPerformed
-
-    private void dosTirosCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dosTirosCheckActionPerformed
-        tresTirosCheck.setSelected(false);
-        dosTirosCheck.setSelected(true);
-    }//GEN-LAST:event_dosTirosCheckActionPerformed
-
     private void unirsePartidaSeleccionadaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unirsePartidaSeleccionadaBtnActionPerformed
         String partidaSeleccionada=listaDePartidasList.getSelectedValue();
         if(Integer.parseInt(partidaSeleccionada.substring(
@@ -136,17 +107,10 @@ public class FormClienteSala extends javax.swing.JFrame{
     }//GEN-LAST:event_unirsePartidaSeleccionadaBtnActionPerformed
 
     private void crearPartidaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearPartidaBtnActionPerformed
-        if(!tresTirosCheck.isSelected()&&!dosTirosCheck.isSelected()){
-            JOptionPane.showMessageDialog(rootPane,"DEBE SELECCIONAR UN TIPO DE JUEGO");
-        }else{
-            String cantidadMaximaJugadores = cantidadDeJugadoresCombo.getSelectedItem().toString();
-            String tipoDeJuego = tresTirosCheck.isSelected()?
-                    Constantes.PARTIDA_TRES_TIROS:Constantes.PARTIDA_DOS_TIROS;
-            cliente.controladorCrearPartida(
-                    Integer.parseInt(cantidadMaximaJugadores),
-                    tipoDeJuego
-            );
-        }
+        String cantidadMaximaJugadores = cantidadDeJugadoresCombo.getSelectedItem().toString();
+        cliente.controladorCrearPartida(
+                Integer.parseInt(cantidadMaximaJugadores),Constantes.PARTIDA_TRES_TIROS
+        );
     }//GEN-LAST:event_crearPartidaBtnActionPerformed
 
     private void unirseAPartidaAleatoriabtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unirseAPartidaAleatoriabtnActionPerformed
@@ -215,13 +179,11 @@ public class FormClienteSala extends javax.swing.JFrame{
     private javax.swing.JTextField buscarPartidaTxt;
     private javax.swing.JComboBox<String> cantidadDeJugadoresCombo;
     private javax.swing.JButton crearPartidaBtn;
-    private javax.swing.JRadioButton dosTirosCheck;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> listaDePartidasList;
     private javax.swing.JLabel nombreJugadorLabel;
-    private javax.swing.JRadioButton tresTirosCheck;
     private javax.swing.JButton unirseAPartidaAleatoriabtn;
     private javax.swing.JButton unirsePartidaSeleccionadaBtn;
     // End of variables declaration//GEN-END:variables

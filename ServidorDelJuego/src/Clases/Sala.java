@@ -67,7 +67,7 @@ public class Sala {
         boolean buscar=true;
         for(int i=1;i<=listaDePartidas.size()&&buscar;i++){
             if(listaDePartidas.get(i-1).contieneAlJugador(socket)){
-                listaDePartidas.get(i-1).administrarJuego(socket, mensaje);
+                listaDePartidas.get(i-1).administrarJuego(socket,mensaje);
                 buscar=false;
             }
         }

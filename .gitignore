@@ -1,2 +1,5 @@
 /ClienteDelJuego/dist/
 /ServidorDelJuego/dist/
+/ClienteDelJuego/nbproject/private/
+/ClienteDelJuego/build/
+/ServidorDelJuego/build/

@@ -74,7 +74,9 @@ public class Partida {
         for(int i=1;i<=listaJugadores.size()&&buscar;i++){
             if(sonElMismoSocket(listaJugadores.get(i-1).getSocketJugador(),socket)){
                 listaJugadores.remove(i-1);
+                if(listaDeTableros!=null)
                 listaDeTableros.remove(i-1);
+                buscar=false;
             }
         }
         if(!hayJugadoresEnLinea())
@@ -198,7 +200,7 @@ public class Partida {
         }return true;
     }
     private boolean sonElMismoSocket(TSocketInfo socketA,TSocketInfo socketB){
-        return socketA.getHoraDeConexion().equals(socketB.getHoraDeConexion());
+        return socketA.getIDSession()==socketB.getIDSession();
     }
     private boolean existeSocketEnListaJugadores(TSocketInfo nuevoSocket) {
         for(int i=1;i<=listaJugadores.size();i++){
@@ -237,9 +239,17 @@ public class Partida {
         if((tablero.estaLleno()&&esUltimoJugadorEnLinea(socket))
                 ||soloHayUnJugadorEnLinea())terminarPartida();
         else{
-            jugadorEnTurno=siguienteJugador(socket);
-            server.sendMensaje(jugadorEnTurno.getSocketJugador(),Constantes.JUEGO+
-                Constantes.ES_TU_TURNO);
+            boolean encontrado=false;
+            while(!encontrado){
+                jugadorEnTurno=siguienteJugador(socket);
+                if(jugadorEnTurno.getEnLinea()){
+                    server.sendMensaje(jugadorEnTurno.getSocketJugador(),Constantes.JUEGO+
+                        Constantes.ES_TU_TURNO);
+                    encontrado=true;
+                }else{
+                    socket=jugadorEnTurno.getSocketJugador();
+                }
+            }
         }
     }
     
@@ -284,6 +294,8 @@ public class Partida {
             Jugador jugador=listaJugadores.get(i-1);
             if(sonElMismoSocket(jugador.getSocketJugador(),socketDesconectado)){
                 listaJugadores.get(i-1).setEnNoLinea();
+                server.sendMensajeTodos(Constantes.JUEGO+
+                        Constantes.JUGADOR_DESCONECTADO+"_"+jugador.getId());
                 buscar=false;
             }
         }

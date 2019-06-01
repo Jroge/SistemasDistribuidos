@@ -38,7 +38,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         nombreDePartidaTxt.setText(nombreDePartidaTxt.getText()+nombrePartida);
         tipoJuegoTxt.setText(tipoJuegoTxt.getText()+tipoDeJuego);
         maximoJugadoresTxt.setText(maximoJugadoresTxt.getText()+
-                cantidadJugadores+" Jugadores");
+                cantidadJugadores);
         mostrarDadosIniciales();
     }
     
@@ -85,7 +85,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         botonLanzar.setBackground(java.awt.Color.cyan);
-        botonLanzar.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
+        botonLanzar.setFont(new java.awt.Font("Courier New", 1, 15)); // NOI18N
         botonLanzar.setText("LANZAR DADOS");
         botonLanzar.setEnabled(false);
         botonLanzar.addActionListener(new java.awt.event.ActionListener() {
@@ -145,10 +145,11 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         jugador5.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
         jugador5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jugador5.setText("jugador5");
-        getContentPane().add(jugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(564, 210, 160, 30));
+        getContentPane().add(jugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 210, 160, 30));
 
         tableroJugador1.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
+        tableroJugador1.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         tableroJugador1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -201,6 +202,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
 
         tableroJugador3.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
+        tableroJugador3.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         tableroJugador3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -252,6 +254,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         getContentPane().add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 110, 150));
 
         tableroJugador2.setBackground(new java.awt.Color(247, 193, 152));
+        tableroJugador2.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         tableroJugador2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -282,7 +285,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         tableroJugador2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tableroJugador2.setDoubleBuffered(true);
         tableroJugador2.setDragEnabled(true);
-        tableroJugador2.setDropMode(javax.swing.DropMode.ON);
+        tableroJugador2.setDropMode(javax.swing.DropMode.INSERT);
         tableroJugador2.setFocusable(false);
         tableroJugador2.setGridColor(new java.awt.Color(0, 0, 0));
         tableroJugador2.setMinimumSize(new java.awt.Dimension(45, 150));
@@ -304,6 +307,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
 
         tableroJugador4.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
+        tableroJugador4.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         tableroJugador4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -352,10 +356,11 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             tableroJugador4.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 50, 110, 140));
+        getContentPane().add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 50, 110, 140));
 
         tableroJugador5.setBackground(new java.awt.Color(247, 193, 152));
         tableroJugador5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 0));
+        tableroJugador5.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         tableroJugador5.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -404,7 +409,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
             tableroJugador5.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        getContentPane().add(jScrollPane12, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 260, 110, 140));
+        getContentPane().add(jScrollPane12, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 260, 110, 140));
 
         listaJugadas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -432,7 +437,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         jugador1.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
         jugador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jugador1.setText("jugador1");
-        getContentPane().add(jugador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, 160, 30));
+        getContentPane().add(jugador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 160, 30));
 
         jugador4.setBackground(new java.awt.Color(153, 153, 0));
         jugador4.setFont(new java.awt.Font("Courier New", 1, 20)); // NOI18N
@@ -440,18 +445,23 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         jugador4.setText("jugador4");
         getContentPane().add(jugador4, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 0, 160, 30));
 
+        ultimaJugadaJugador2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ultimaJugadaJugador2.setText("ultimaJugadaJugador2");
         getContentPane().add(ultimaJugadaJugador2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
+        ultimaJugadaJugador3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ultimaJugadaJugador3.setText("ultimaJugadaJugador3");
         getContentPane().add(ultimaJugadaJugador3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, -1, -1));
 
+        ultimaJugadaJugador4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ultimaJugadaJugador4.setText("ultimaJugadaJugador4");
         getContentPane().add(ultimaJugadaJugador4, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 30, -1, -1));
 
+        ultimaJugadaJugador5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ultimaJugadaJugador5.setText("ultimaJugadaJugador5");
-        getContentPane().add(ultimaJugadaJugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(594, 240, -1, -1));
+        getContentPane().add(ultimaJugadaJugador5, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 240, -1, -1));
 
+        ultimaJugadaJugador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ultimaJugadaJugador1.setText("ultimaJugadaJugador1");
         getContentPane().add(ultimaJugadaJugador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 340, -1, -1));
 
@@ -1088,6 +1098,16 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         actualizarTablero(3,"");
         actualizarTablero(4,"");
         actualizarTablero(5,"");
+        tableroJugador1.getTableHeader().setReorderingAllowed(false);
+        tableroJugador2.getTableHeader().setReorderingAllowed(false);
+        tableroJugador3.getTableHeader().setReorderingAllowed(false);
+        tableroJugador4.getTableHeader().setReorderingAllowed(false);
+        tableroJugador5.getTableHeader().setReorderingAllowed(false);
+    }
+    public void mostrarJugadorDesconectado(String idJugador){
+        String[]num=idJugador.split("R");
+        tablero=new Tablero();
+        setEnJugadores(false, Integer.parseInt(num[1]),"Desconectado");
     }
     /*public static void main(String args[]) {
         try {
