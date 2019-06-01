@@ -13,16 +13,13 @@ public class ControladorCliente{
     private FormClienteSala sala;
     public static String miNombre,miId,miPartida;
     
-    public String ip="192.168.43.249";//192.168.1.108";//"192.168.1.108"; // CAMBIAR LA IP ()
-    
-    
     public ControladorCliente(){
         
     }
     public ControladorCliente(String nuevoNombre){
         miNombre=nuevoNombre;
         iniciarFormClienteSala();
-        cliente = new TSClientClienteSocket(ip,9090){//LOCAL
+        cliente = new TSClientClienteSocket("127.0.0.1",9090){//LOCAL
             @Override
             public void onRead(String mensaje){String[] accion=mensaje.split("_");
                 System.out.println(mensaje);
@@ -31,6 +28,7 @@ public class ControladorCliente{
                     case Constantes.CERRAR_PARTIDA:cerrarPartida(accion[3]);break;
                     
                     case Constantes.PARTIDA_INFO:iniciarFormClienteJuego(accion[3],accion[4],accion[5]);break;
+                    case Constantes.JUEGO_INICIADO:juego.setMensajeJuegoIniciado();break;
                     case Constantes.NUEVO_ID:setNuevoId(accion[3]);break;
                     case Constantes.NOMBRE_JUGADORES:juego.mostrarNombreDeJugadores(accion[3]);break;
                     case Constantes.ES_TU_TURNO:juego.iniciarTurno();break;

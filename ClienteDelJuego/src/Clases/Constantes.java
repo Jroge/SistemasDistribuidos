@@ -40,6 +40,7 @@ public class Constantes {
     public static final String JUGADOR_DESCONECTADO = "JUGADORDESCNECTADO";
     public static final String JUGADOR_RECONECTADO = "JUGADORRECONECTADO";
     public static final String REANUDAR_TURNO = "REANUDARTURNO";
+    public static final String JUEGO_INICIADO = "JUEGOINICIADO";
     
     public static final String JUEGO = "S_JUEGO_";
     public static final String SALA = "S_SALA_";

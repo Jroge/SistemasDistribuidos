@@ -1109,6 +1109,9 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         tablero=new Tablero();
         setEnJugadores(false, Integer.parseInt(num[1]),"Desconectado");
     }
+    public void setMensajeJuegoIniciado(){
+        jugadorEnTurno.setText("Partida Iniciada");
+    }
     /*public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
