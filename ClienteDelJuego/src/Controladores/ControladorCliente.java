@@ -30,6 +30,7 @@ public class ControladorCliente{
                     case Constantes.PARTIDA_INFO:iniciarFormClienteJuego(accion[3],accion[4],accion[5]);break;
                     case Constantes.JUEGO_INICIADO:juego.setMensajeJuegoIniciado();break;
                     case Constantes.NUEVO_ID:setNuevoId(accion[3]);break;
+                    case Constantes.JUGADOR_NUEVO:juego.actualizarNombresJugadores(accion[3]);break;
                     case Constantes.NOMBRE_JUGADORES:juego.mostrarNombreDeJugadores(accion[3]);break;
                     case Constantes.ES_TU_TURNO:juego.iniciarTurno();break;
                     case Constantes.NOMBRE_JUGADOR_EN_TURNO:juego.cambiarJugadorEnTurno(accion[3]);break;
@@ -137,7 +138,6 @@ public class ControladorCliente{
                 tipoDeJuego,
                 Integer.parseInt(cantidadJugadores)
         );
-        System.out.println("CREADO");
         juego.setVisibleC(true);
     }
     private void terminarFormClienteSala(){

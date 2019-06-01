@@ -1110,7 +1110,7 @@ public final class FormClienteJuego extends javax.swing.JFrame {
         setEnJugadores(false, Integer.parseInt(num[1]),"Desconectado");
     }
     public void setMensajeJuegoIniciado(){
-        jugadorEnTurno.setText("Partida Iniciada");
+        jugadorEnTurno.setText("EN JUEGO!");
     }
     /*public static void main(String args[]) {
         try {

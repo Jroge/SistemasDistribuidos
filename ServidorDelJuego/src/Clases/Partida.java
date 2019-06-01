@@ -48,8 +48,6 @@ public class Partida {
             case Constantes.JUGADA_ESCOGIDA:juegoJugadaEscogida(socketInfo, accion[3]); break;
             case Constantes.FIN_DE_TURNO:juegoPasarAlSiguienteTurno(socketInfo);break;
             case Constantes.ABANDONAR_PARTIDA:juegoSacarDeLaPartida(socketInfo);break;
-            case Constantes.JUGADOR_DESCONECTADO:juegoSetEnNoLinea(socketInfo);break;
-            case Constantes.JUGADOR_RECONECTADO:juegoSetEnLinea(socketInfo);break;
         }
     }
     
@@ -61,7 +59,7 @@ public class Partida {
                     listaJugadores.get(i-1).setListo();
                     buscar=false;
                 }
-            }if(todosListos()&&cantidadJugadoresEnLinea()>1)juegoIniciarPartida();
+            }if(todosListos()&&listaJugadores.size()>1)juegoIniciarPartida();
         }else{
             server.sendMensaje(socket,Constantes.JUEGO+Constantes.JUEGO_INICIADO);
         }
@@ -85,19 +83,20 @@ public class Partida {
                 buscar=false;
             }
         }
-        if(!hayJugadoresEnLinea())
+        if(listaJugadores.isEmpty())
             server.sendMensaje(socket, Constantes.SALA+Constantes.CERRAR_PARTIDA+"_"+nombreDeLaPartida);
     }
     private void juegoIniciarPartida(){
-        boolean buscar=true;
+        partidaIniciada=true;
         crearNuevosTableros();
+        boolean buscar=true;
         for(int i=1;i<=listaJugadores.size()&&buscar;i++){
             Jugador jugador=listaJugadores.get(i-1);
-            if(jugador.getEnLinea()){
+            if(jugador.getListo()){
+                jugador.setId(Constantes.JUGADOR+posicionDelJugador(jugador.getSocketJugador()));
                 server.sendMensaje(jugador.getSocketJugador(),Constantes.JUEGO+
                     Constantes.NUEVO_ID+"_"+jugador.getId());
                 buscar=false;
-                partidaIniciada=true;
             }
         }
     }
@@ -141,34 +140,11 @@ public class Partida {
         actualizarTablero(socketInfo,jugada,tablero);
     }
     public void addNuevoJugador(TSocketInfo nuevoSocket){
-        if(!existeSocketEnListaJugadores(nuevoSocket)){
             listaJugadores.addLast(new Jugador(
                 nuevoSocket,Constantes.JUGADOR+(listaJugadores.size()+1)));
             server.sendMensaje(nuevoSocket,Constantes.JUEGO+
                     Constantes.PARTIDA_INFO+"_"+nombreDeLaPartida+"_"+tipoDeJuego+"_"+
                     Integer.toString(cantidadMaxDeJugadores));
-            sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.NOMBRE_JUGADORES+"_"+
-                    listaJugadoresSinSocket());
-        }else{
-            boolean buscar=true;
-            for(int i=1;i<=listaJugadores.size()&&buscar;i++){
-                if(sonElMismoSocket(nuevoSocket,
-                        listaJugadores.get(i-1).getSocketJugador())){
-                    listaJugadores.get(i-1).setListo();
-                    buscar=false;
-                }
-            }
-        }
-    }
-    public void deshabilitarJugador(TSocketInfo socket){
-        boolean buscar=true;
-        for(int i=1;i<=listaJugadores.size()&&buscar;i++){
-            if(sonElMismoSocket(socket,
-                    listaJugadores.get(i-1).getSocketJugador())){
-                listaJugadores.get(i-1).setNoListo();
-                buscar=false;
-            }
-        }
     }
     public boolean contieneAlJugador(TSocketInfo socketDelJugador){
         return listaJugadores.stream().anyMatch((jugador)
@@ -199,28 +175,17 @@ public class Partida {
                     listaJugadores.get(i-1).getNombre()+",";
         }return nuevaLista;
     }
-    private boolean esUltimoJugadorEnLinea(TSocketInfo socket){
+    private boolean esUltimoJugadorListo(TSocketInfo socket){
         int posicionDeJugador=posicionDelJugador(socket);
         for(int i=listaJugadores.size();i>posicionDeJugador;i--){
             Jugador jugador=listaJugadores.get(i-1);
-            if(jugador.getEnLinea()){
+            if(jugador.getListo()){
                 return sonElMismoSocket(socket,jugador.getSocketJugador());
             }
         }return true;
     }
     private boolean sonElMismoSocket(TSocketInfo socketA,TSocketInfo socketB){
         return socketA.getIDSession()==socketB.getIDSession();
-    }
-    private boolean existeSocketEnListaJugadores(TSocketInfo nuevoSocket) {
-        for(int i=1;i<=listaJugadores.size();i++){
-            if(sonElMismoSocket(listaJugadores.get(i-1).getSocketJugador(),nuevoSocket))
-                return true;
-        }return false;
-    }
-    private Jugador primerJugadorEnLinea() {
-        for(Jugador jugador:listaJugadores){
-            if(jugador.getListo())return jugador;
-        }return null;
     }
     private int posicionDelJugador(TSocketInfo socket){
         for(int i=1;i<=listaJugadores.size();i++){
@@ -231,7 +196,6 @@ public class Partida {
     public void terminarPartida(){
         partidaIniciada=false;
         int maximaPuntuacion=0;
-        LinkedList<String> listaDeGanadores=new LinkedList<>();
         String listaDeResultado="";
         for(int i=1;i<=listaDeTableros.size();i++){
             Tablero tablero=listaDeTableros.get(i-1);
@@ -243,16 +207,17 @@ public class Partida {
         }
         sendMensajeJugadoresPartida(Constantes.JUEGO+Constantes.TERMINAR_PARTIDA+
                 "_"+listaDeResultado+"_"+Integer.toString(maximaPuntuacion));
+        setTodosNoListos();
     }
     public void juegoPasarAlSiguienteTurno(TSocketInfo socket){
         Tablero tablero=listaDeTableros.get(posicionDelJugador(socket));
-        if((tablero.estaLleno()&&esUltimoJugadorEnLinea(socket))
-                ||soloHayUnJugadorEnLinea())terminarPartida();
+        if((tablero.estaLleno()&&esUltimoJugadorListo(socket))
+                ||listaDeTableros.size()==1)terminarPartida();
         else{
             boolean encontrado=false;
             while(!encontrado){
                 jugadorEnTurno=siguienteJugador(socket);
-                if(jugadorEnTurno.getEnLinea()){
+                if(jugadorEnTurno.getListo()){
                     server.sendMensaje(jugadorEnTurno.getSocketJugador(),Constantes.JUEGO+
                         Constantes.ES_TU_TURNO);
                     encontrado=true;
@@ -269,65 +234,27 @@ public class Partida {
         return listaJugadores.stream().noneMatch((Jugador jugador)
                 ->jugador.getNombre().equals(" "));
     }
-    private boolean todosListos(){
-        return listaJugadores.stream().noneMatch((jugador)
-                ->(!jugador.getListo()));
-    }
-    private int cantidadJugadoresEnLinea(){
-        int cantidad=0;
-        cantidad = listaJugadores.stream().filter((jugador)
-                ->(jugador.getEnLinea())).map((_item)->1).reduce(cantidad, Integer::sum);
-        return cantidad;
-    }
-    private boolean soloHayUnJugadorEnLinea(){
-        int cantidad=0;
-        cantidad=listaJugadores.stream().filter((jugador)
-                ->(jugador.getEnLinea())).map((_item) -> 1).reduce(cantidad, Integer::sum);
-        return cantidad==1;
-    }
-    private boolean hayJugadoresEnLinea(){
-        for(Jugador jugador:listaJugadores){
-            if(jugador.getEnLinea())
-                return true;
-        }return false;
-    }
     private void crearNuevosTableros(){
         listaDeTableros=new LinkedList<>();
         for(int i=1;i<=listaJugadores.size();i++){
             listaDeTableros.addLast(new Tablero());
-            listaJugadores.get(i-1).setNoListo();
         }
     }
-    private void juegoSetEnNoLinea(TSocketInfo socketDesconectado){
-        boolean buscar=true;
-        for(int i=1;i<=listaJugadores.size()&&buscar;i++){
-            Jugador jugador=listaJugadores.get(i-1);
-            if(sonElMismoSocket(jugador.getSocketJugador(),socketDesconectado)){
-                listaJugadores.get(i-1).setEnNoLinea();
-                server.sendMensajeTodos(Constantes.JUEGO+
-                        Constantes.JUGADOR_DESCONECTADO+"_"+jugador.getId());
-                buscar=false;
-            }
-        }
+    private boolean todosListos(){
+        for(Jugador jugador:listaJugadores){
+            if(!jugador.getListo())
+                return false;
+        }return true;
     }
-    private void juegoSetEnLinea(TSocketInfo socketDesconectado){
-        boolean buscar=true;
-        for(int i=1;i<=listaJugadores.size()&&buscar;i++){
-            Jugador jugador=listaJugadores.get(i-1);
-            if(sonElMismoSocket(jugador.getSocketJugador(),socketDesconectado)){
-                listaJugadores.get(i-1).setEnLinea();
-                buscar=false;
-                if(jugadorEnTurno.equals(jugador))
-                    server.sendMensaje(jugador.getSocketJugador(),Constantes.JUEGO+
-                            Constantes.REANUDAR_TURNO);
-            }
+    private void setTodosNoListos(){
+        for(Jugador jugador:listaJugadores){
+            jugador.setNoListo();
         }
     }
     private void sendMensajeJugadoresPartida(String mensaje){
         for(Jugador jugador:listaJugadores){
-            if(jugador.getListo()){
+            if(jugador.getListo())
                 server.sendMensaje(jugador.getSocketJugador(),mensaje);
-            }
         }
     }
 }

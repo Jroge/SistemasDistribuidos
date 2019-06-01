@@ -118,7 +118,7 @@ public class FormServidorJuego extends javax.swing.JFrame {
            @Override
             public void onError(TSocketInfo socketInfo, int code){
                 listaMisConectados.remove(socketInfo);
-                sala.administrarSala(socketInfo, Constantes.SALA+Constantes.JUGADOR_DESCONECTADO);
+                modificarListaConectados();
                 System.out.println("Error con: " + socketInfo.getHostName() + " HRS: "+socketInfo.getHoraDeConexion());
             }
        };
